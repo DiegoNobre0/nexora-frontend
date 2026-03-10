@@ -1,4 +1,4 @@
-@use 'styles/variables' as var;
+@use 'variables' as var;
 
 body {
   margin: 0;
@@ -8,7 +8,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-// Classe utilitária para os cards que você usará em todo o SaaS
 .nexora-card {
   background: var.$surface;
   border-radius: var.$radius-lg;
@@ -18,5 +17,23 @@ body {
 
   &:hover {
     border-color: var.$primary;
+  }
+}
+
+// Configuração dos ícones Lucide
+lucide-icon, i[data-lucide] {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2px;
+  display: inline-block;
+  vertical-align: middle;
+  color: var.$text-secondary;
+  transition: var.$transition;
+}
+
+.active {
+  lucide-icon, i[data-lucide] {
+    color: var.$primary;
+    filter: drop-shadow(0 0 5px rgba(108, 78, 255, 0.4));
   }
 }

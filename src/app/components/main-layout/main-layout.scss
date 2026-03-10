@@ -1,8 +1,9 @@
 @use 'variables' as var; // Certifique-se que o caminho para o seu _variables.scss está correto
 
 .layout-wrapper {
-  display: flex;
+  display: flex;       // Sidebar e Main lado a lado
   height: 100vh;
+  width: 100vw;
   background-color: var.$background;
   overflow: hidden;
 }
@@ -96,7 +97,7 @@
 }
 
 .main-content {
-  flex: 1;
-  overflow-y: auto;
+  flex: 1;             // Ocupa o resto da tela
+  overflow-y: auto;    // Scroll só no conteúdo do dashboard
   padding: 2rem;
 }

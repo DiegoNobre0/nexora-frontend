@@ -1,49 +1,155 @@
 @use 'variables' as var;
 
+:host {
+    display: block;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+.sidebar-icon {
+    width: 20px; // Tamanho ideal para sidebar
+    height: 20px;
+    stroke-width: 2px; // Linha fina = Sofisticação
+    color: var.$text-secondary;
+    transition: var.$transition;
+    flex-shrink: 0; // Impede o ícone de esmagar quando a barra fechar
+}
+
 .sidebar {
-  width: 260px;
-  height: 100vh;
-  background: #020617; // Um tom ainda mais escuro para destaque
-  border-right: 1px solid var.$border;
-  display: flex;
-  flex-direction: column;
+    width: 260px;
+    height: 100vh;
+    background: #020617;
+    border-right: 1px solid var.$border;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: width 0.3s ease;
 
-  .brand {
-    padding: 2rem;
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: var.$primary;
-    letter-spacing: -1px;
-  }
+    // Estado Retraído
+    &.collapsed {
+        width: 80px;
 
-  .nav-group {
-    flex: 1;
-    padding: 0 1rem;
+        .brand {
+            padding: 2rem 0;
+            justify-content: center;
+        }
 
-    .menu-item {
-      display: flex;
-      align-items: center;
-      padding: 0.75rem 1rem;
-      margin-bottom: 0.5rem;
-      border-radius: var.$radius-md;
-      color: var.$text-secondary;
-      text-decoration: none;
-      transition: var.$transition;
+        .menu-item {
+            justify-content: center;
+            padding: 0.75rem;
+            border-radius: 50%;
+        }
 
-      i { margin-right: 12px; }
-
-      &:hover {
-        background: var.$surface;
-        color: var.$text-primary;
-      }
-
-      &.active {
-        background: rgba(108, 78, 255, 0.1);
-        color: var.$primary;
-        font-weight: 600;
-        border-left: 4px solid var.$primary;
-        border-radius: 0 var.$radius-md var.$radius-md 0;
-      }
+        .sidebar-footer {
+            justify-content: center;
+            padding: 1.5rem 0;
+        }
     }
-  }
+
+    .toggle-btn {
+        position: absolute;
+        right: -12px;
+        top: 30px;
+        width: 24px;
+        height: 24px;
+        background: var.$primary;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        z-index: 10;
+    }
+
+    .brand {
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+
+        .logo-icon {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var.$primary;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var.$primary;
+            letter-spacing: -1px;
+        }
+    }
+
+    .nav-group {
+        flex: 1;
+        padding: 0 0.75rem;
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: var.$radius-md;
+            color: var.$text-secondary;
+            text-decoration: none;
+            transition: var.$transition;
+
+            .icon {
+                font-size: 1.25rem;
+                min-width: 24px;
+            }
+
+            .label {
+                margin-left: 12px;
+                white-space: nowrap;
+            }
+
+            &:hover {
+                background: var.$surface;
+                color: var.$text-primary;
+            }
+
+            &.active {
+                .sidebar-icon {
+                    color: var.$primary;
+                    // Um leve brilho (glow) roxo no ícone ativo
+                    filter: drop-shadow(0 0 4px rgba(108, 78, 255, 0.5));
+                }
+
+                background: rgba(108, 78, 255, 0.1);
+                color: var.$primary;
+                font-weight: 600;
+                border-left: 4px solid var.$primary;
+            }
+
+            &:hover:not(.active) {
+                .sidebar-icon {
+                    color: var.$text-primary;
+                }
+            }
+        }
+    }
+}
+
+.sidebar-footer {
+    padding: 1.5rem;
+    border-top: 1px solid var.$border;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .user-badge {
+        min-width: 32px;
+        height: 32px;
+        background: var.$primary;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: white;
+    }
 }

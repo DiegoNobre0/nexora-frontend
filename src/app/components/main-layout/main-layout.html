@@ -1,35 +1,6 @@
 <div class="layout-wrapper">
   
-  <aside class="sidebar-container">
-    <div class="sidebar-logo">
-      <h1>NEXORA</h1>
-    </div>
-    
-    <nav class="nav-list">
-      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
-        <span>📊</span> Dashboard
-      </a>
-
-      <a routerLink="/agenda" routerLinkActive="active" class="nav-item">
-        <span>📅</span> Agenda
-      </a>
-      
-      <a routerLink="/clientes" routerLinkActive="active" class="nav-item">
-        <span>👤</span> Clientes
-      </a>
-
-      <a routerLink="/whatsapp" routerLinkActive="active" class="nav-item">
-        <span>💬</span> WhatsApp
-      </a>
-    </nav>
-
-    <div class="sidebar-footer">
-      <div class="user-info">
-        <div class="user-badge">D</div>
-        <span class="user-name">Diego Nobre</span>
-      </div>
-    </div>
-  </aside>
+  <app-sidebar></app-sidebar> 
 
   <main class="main-content">
     <router-outlet></router-outlet>

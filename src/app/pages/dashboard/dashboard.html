@@ -1,1 +1,72 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <h2>Visão Geral</h2>
+    <p>Acompanhe o desempenho da sua empresa em tempo real.</p>
+  </header>
+
+  <div class="metrics-grid">
+  <div class="metric-card">
+    <div class="card-icon-wrapper revenue">
+      <lucide-icon name="dollar-sign"></lucide-icon>
+    </div>
+    <div class="card-info">
+      <span class="label">Receita Hoje</span>
+      <h3 class="value">R$ 1.280,00</h3>
+      <span class="trend positive">+12% em relação a ontem</span>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="card-icon-wrapper appointments">
+      <lucide-icon name="calendar"></lucide-icon>
+    </div>
+    <div class="card-info">
+      <span class="label">Agendamentos</span>
+      <h3 class="value">18</h3>
+      <span class="trend">6 pendentes de confirmação</span>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="card-icon-wrapper clients">
+      <lucide-icon name="users"></lucide-icon>
+    </div>
+    <div class="card-info">
+      <span class="label">Novos Clientes</span>
+      <h3 class="value">4</h3>
+      <span class="trend positive">Destaque na semana</span>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="card-icon-wrapper ai">
+      <lucide-icon name="bot"></lucide-icon> </div>
+    <div class="card-info">
+      <span class="label">Ações da IA</span>
+      <h3 class="value">42</h3>
+      <span class="trend">Mensagens processadas</span>
+    </div>
+  </div>
+</div>
+
+ <div class="chart-section nexora-card">
+  <div class="chart-header">
+    <h4>Faturamento Semanal</h4>
+    <button class="btn-period">Últimos 7 dias</button>
+  </div>
+  
+  <div class="chart-content">
+    <apx-chart
+      [series]="chartOptions.series!"
+      [chart]="chartOptions.chart!"
+      [xaxis]="chartOptions.xaxis!"
+      [stroke]="chartOptions.stroke!"
+      [tooltip]="chartOptions.tooltip!"
+      [dataLabels]="chartOptions.dataLabels!"
+      [grid]="chartOptions.grid!"
+      [colors]="chartOptions.colors!"
+      [theme]="chartOptions.theme!"
+    ></apx-chart>
+  </div>
+</div>
+</div>

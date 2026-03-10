@@ -1,14 +1,12 @@
-// src/app/components/main-layout/main-layout.component.ts
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { Sidebar } from '../sidebar/sidebar';
-
+import { RouterOutlet } from '@angular/router';
+import { Sidebar } from '../sidebar/sidebar'; // Ajuste o caminho se necessário
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, Sidebar],
+  imports: [RouterOutlet, Sidebar], // Importa o componente Sidebar
   templateUrl: './main-layout.html',
+  styleUrl: './main-layout.scss'
 })
 export class MainLayout {}

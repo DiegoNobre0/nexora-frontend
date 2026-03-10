@@ -1,0 +1,170 @@
+@use 'variables' as var;
+
+// 1. Layout da Página
+.page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h1 { 
+    font-size: 1.8rem; 
+    font-weight: 700; 
+    margin: 0; 
+    color: var.$text-primary;
+  }
+  
+  p { 
+    color: var.$text-secondary; 
+    margin-top: 0.3rem; 
+    font-size: 0.95rem;
+  }
+}
+
+// 2. Estilização da Tabela
+.table-container {
+  padding: 0; 
+  overflow: hidden;
+  background: var.$surface;
+  border: 1px solid var.$border;
+  border-radius: var.$radius-lg;
+}
+
+.nexora-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  th {
+    background-color: rgba(0, 0, 0, 0.2); // Fundo levemente mais escuro para o cabeçalho
+    padding: 1rem 1.5rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var.$text-secondary;
+    border-bottom: 1px solid var.$border;
+  }
+
+  td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var.$border;
+    color: var.$text-primary;
+    vertical-align: middle;
+    font-size: 0.9rem;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tr:hover td {
+    background-color: rgba(var.$primary, 0.02);
+  }
+
+  // Elementos Internos da Tabela
+  .client-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var.$primary, var.$primary-dark);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.75rem;
+      box-shadow: 0 4px 10px rgba(var.$primary, 0.2);
+    }
+  }
+
+  .badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    
+    &.active {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10B981;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+  }
+}
+
+// 3. Ações e Botões
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .btn-action-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: rgba(var.$background, 0.4);
+    border: 1px solid var.$border;
+    border-radius: 8px;
+    color: var.$text-secondary;
+    cursor: pointer;
+    transition: var.$transition;
+
+    // lucide-icon {
+    //   width: 16px;
+    //   height: 16px;
+    //   stroke-width: 2px;
+    // }
+
+    &:hover {
+      background: rgba(var.$primary, 0.1);
+      border-color: var.$primary;
+      color: var.$primary;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(var.$primary, 0.2);
+    }
+
+    &.delete:hover {
+      background: rgba(#EF4444, 0.1);
+      border-color: #EF4444;
+      color: #EF4444;
+      box-shadow: 0 4px 12px rgba(#EF4444, 0.2);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+.btn-primary {
+  background: var.$primary;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var.$radius-md;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var.$transition;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    background: var.$primary-dark;
+    box-shadow: 0 4px 15px rgba(var.$primary, 0.3);
+    transform: translateY(-1px);
+  }
+}
