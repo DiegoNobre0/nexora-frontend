@@ -1,1 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'styles/variables' as var;
+
+body {
+  margin: 0;
+  background-color: var.$background;
+  color: var.$text-primary;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+// Classe utilitária para os cards que você usará em todo o SaaS
+.nexora-card {
+  background: var.$surface;
+  border-radius: var.$radius-lg;
+  border: 1px solid var.$border;
+  padding: 1.5rem;
+  transition: var.$transition;
+
+  &:hover {
+    border-color: var.$primary;
+  }
+}
