@@ -1,0 +1,94 @@
+<header class="top-header">
+  
+  <div class="header-left">
+    <button class="action-btn menu-btn" (click)="toggleMenu.emit()">
+      <lucide-icon name="menu"></lucide-icon>
+    </button>
+   
+    <button class="action-btn search-btn">
+      <lucide-icon name="search"></lucide-icon>
+    </button>
+  </div>
+
+  <div class="header-right">
+    
+    <button class="action-btn">
+      <lucide-icon name="moon"></lucide-icon>
+    </button>
+
+    <div class="dropdown-container">
+      <button class="action-btn" (click)="toggleMessages()" [class.active]="isMessagesOpen()">
+        <lucide-icon name="mail"></lucide-icon>
+        <span class="badge warning">3</span>
+      </button>
+
+      @if (isMessagesOpen()) {
+        <div class="dropdown-menu">
+          <div class="dropdown-header">
+            <h3>Inbox</h3>
+            <span class="badge-pill warning">3 new</span>
+          </div>
+          <div class="dropdown-list">
+            <div class="list-item">
+              <div class="avatar img-1">MF</div>
+              <div class="item-content">
+                <h4>Michell Flintoff</h4>
+                <p>Você: Ontem foi ótimo...</p>
+              </div>
+              <span class="time">agora</span>
+            </div>
+            <div class="list-item">
+              <div class="avatar img-2">BA</div>
+              <div class="item-content">
+                <h4>Bianca Anderson</h4>
+                <p>Belo vestido, você...</p>
+              </div>
+              <span class="time">5 min</span>
+            </div>
+          </div>
+          <button class="btn-block">Ver todas as Mensagens</button>
+        </div>
+      }
+    </div>
+
+    <div class="dropdown-container">
+      <button class="action-btn" (click)="toggleNotif()" [class.active]="isNotifOpen()">
+        <lucide-icon name="bell"></lucide-icon>
+        <span class="badge danger">5</span>
+      </button>
+
+      @if (isNotifOpen()) {
+        <div class="dropdown-menu">
+          <div class="dropdown-header">
+            <h3>Notificações</h3>
+            <span class="badge-pill info">5 new</span>
+          </div>
+          <div class="dropdown-list">
+            <div class="list-item">
+              <div class="icon-circle info"><lucide-icon name="layout-dashboard"></lucide-icon></div>
+              <div class="item-content">
+                <h4>Admin Lançado</h4>
+                <p>Veja o novo painel!</p>
+              </div>
+              <span class="time">8:30 AM</span>
+            </div>
+            <div class="list-item">
+              <div class="icon-circle warning"><lucide-icon name="calendar"></lucide-icon></div>
+              <div class="item-content">
+                <h4>Evento Hoje</h4>
+                <p>Lembrete de compromisso</p>
+              </div>
+              <span class="time">8:21 AM</span>
+            </div>
+          </div>
+          <button class="btn-block">Ver todas as Notificações</button>
+        </div>
+      }
+    </div>
+
+    <div class="user-profile">
+      <div class="avatar-profile">DN</div>
+    </div>
+  </div>
+
+</header>

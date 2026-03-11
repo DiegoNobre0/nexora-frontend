@@ -1,40 +1,56 @@
-<aside class="sidebar" [class.collapsed]="isCollapsed()">
-  
-  <button class="toggle-btn" (click)="toggleSidebar()">
-    {{ isCollapsed() ? '→' : '←' }}
-  </button>
+<aside class="sidebar" [class.collapsed]="isCollapsed()" [class.mobile-open]="isMobileOpen()">
+
+  <!-- <div class="mobile-header mobile-only">
+    <button class="btn-close-sidebar" *ngIf="!isCollapsed()">
+      <lucide-icon name="arrow-left"></lucide-icon>
+      <span>Voltar</span>
+    </button>
+  </div> -->
 
   <div class="brand">
-    <span class="logo-icon">N</span>
+    <div class="brand-badge">
+      <span class="logo-icon">N</span>
+    </div>
     <h1 *ngIf="!isCollapsed()">EXORA</h1>
   </div>
 
-<nav class="nav-group">
-  <a routerLink="/dashboard" routerLinkActive="active" class="menu-item">
-    <lucide-icon name="layout-dashboard" class="sidebar-icon"></lucide-icon>
-    <span class="label" *ngIf="!isCollapsed()">Dashboard</span>
-  </a>
+  <div class="menu-section">
+    <span class="section-title" *ngIf="!isCollapsed()">Dashboards</span>
+    
+    <nav class="nav-group">
+      <a routerLink="/dashboard" routerLinkActive="active" class="menu-item">
+        <lucide-icon name="layout-dashboard" class="sidebar-icon"></lucide-icon>
+        <span class="label" *ngIf="!isCollapsed()">Dashboard</span>
+      </a>
+    </nav>
+  </div>
 
-  <a routerLink="/agenda" routerLinkActive="active" class="menu-item">
-    <lucide-icon name="calendar" class="sidebar-icon"></lucide-icon>
-    <span class="label" *ngIf="!isCollapsed()">Agenda</span>
-  </a>
-  
-  <a routerLink="/clientes" routerLinkActive="active" class="menu-item">
-    <lucide-icon name="users" class="sidebar-icon"></lucide-icon>
-    <span class="label" *ngIf="!isCollapsed()">Clientes</span>
-  </a>
+  <div class="menu-section">
+    <span class="section-title" *ngIf="!isCollapsed()">Apps</span>
+    
+    <nav class="nav-group">
+      <a routerLink="/agenda" routerLinkActive="active" class="menu-item">
+        <lucide-icon name="calendar" class="sidebar-icon"></lucide-icon>
+        <span class="label" *ngIf="!isCollapsed()">Agenda</span>
+      </a>
+      
+      <a routerLink="/clientes" routerLinkActive="active" class="menu-item">
+        <lucide-icon name="users" class="sidebar-icon"></lucide-icon>
+        <span class="label" *ngIf="!isCollapsed()">Clientes</span>
+      </a>
 
-  <a routerLink="/whatsapp" routerLinkActive="active" class="menu-item">
-    <lucide-icon name="message-square" class="sidebar-icon"></lucide-icon>
-    <span class="label" *ngIf="!isCollapsed()">WhatsApp</span>
-  </a>
-</nav>
+      <a routerLink="/whatsapp" routerLinkActive="active" class="menu-item">
+        <lucide-icon name="message-square" class="sidebar-icon"></lucide-icon>
+        <span class="label" *ngIf="!isCollapsed()">WhatsApp</span>
+      </a>
+    </nav>
+  </div>
 
-  <div class="sidebar-footer">
+  <div class="spacer"></div> <div class="sidebar-footer">
     <div class="user-badge">D</div>
     <div class="user-info" *ngIf="!isCollapsed()">
       <span class="user-name">Diego Nobre</span>
+      <span class="user-role">Administrador</span>
     </div>
   </div>
 </aside>

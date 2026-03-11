@@ -1,1 +1,68 @@
-<p>agenda works!</p>
+<div class="agenda-container">
+  <header class="agenda-header">
+    <div class="nav-group">
+      <h1>Agenda</h1>
+      <div class="calendar-controls">
+        <button (click)="dataSelecionada.set(now())" class="btn-outline">Hoje</button>
+        <div class="pager">
+          <button (click)="navegar(-1)"><lucide-icon name="chevron-left"></lucide-icon></button>
+          <span>{{ dataSelecionada() | date:'dd MMM, yyyy' }}</span>
+          <button (click)="navegar(1)"><lucide-icon name="chevron-right"></lucide-icon></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-group">
+      <div class="view-toggles">
+        <button [class.active]="viewMode() === 'dia'" (click)="viewMode.set('dia')">Dia</button>
+        <button [class.active]="viewMode() === 'semana'" (click)="viewMode.set('semana')">Semana</button>
+      </div>
+      <button class="btn-primary"><lucide-icon name="plus"></lucide-icon> Novo Agendamento</button>
+    </div>
+  </header>
+
+  <section class="agenda-filters">
+    <div class="filter-item">
+      <label>Profissional</label>
+      <select><option>Todos os Profissionais</option></select>
+    </div>
+    <div class="status-legend">
+      <span class="dot confirmado"></span> Confirmado
+      <span class="dot pendente"></span> Pendente
+      <span class="dot cancelado"></span> Cancelado
+    </div>
+  </section>
+
+  <div class="agenda-scroll-area">
+    <div class="agenda-grid" [style.grid-template-columns]="'80px repeat(' + profissionais().length + ', 1fr)'">
+      
+      <div class="time-gutter"></div>
+      @for (prof of profissionais(); track prof.id) {
+        <div class="prof-header">
+          <div class="avatar">{{ prof.avatar }}</div>
+          <span>{{ prof.nome }}</span>
+        </div>
+      }
+
+      @if (linePosition() > 0) {
+        <div class="current-time-line" [style.top.px]="linePosition() + 104">
+          <div class="dot"></div>
+        </div>
+      }
+
+      @for (hora of horarios; track hora) {
+        <div class="time-row-label">{{ hora }}</div>
+        @for (prof of profissionais(); track prof.id) {
+          <div class="grid-slot" (click)="abrirNovoAgendamento(prof, hora)">
+            @if (hora === '09:00' && prof.id === '1') {
+              <div class="appointment confirmado" style="height: 58px;">
+                <span class="title">Corte Degradê</span>
+                <span class="client">Arthur Nobre</span>
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>

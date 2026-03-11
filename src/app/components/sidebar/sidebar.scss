@@ -1,155 +1,173 @@
 @use 'variables' as var;
 
+// Variáveis locais para a sidebar
+$sidebar-width: 260px;
+$sidebar-collapsed: 85px;
+
 :host {
-    display: block;
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-
-.sidebar-icon {
-    width: 20px; // Tamanho ideal para sidebar
-    height: 20px;
-    stroke-width: 2px; // Linha fina = Sofisticação
-    color: var.$text-secondary;
-    transition: var.$transition;
-    flex-shrink: 0; // Impede o ícone de esmagar quando a barra fechar
+  display: block;
+  z-index: 100;
 }
 
 .sidebar {
-    width: 260px;
-    height: 100vh;
-    background: #020617;
-    border-right: 1px solid var.$border;
-    display: flex;
-    flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  background: #020617;
+  border-right: 1px solid var.$border;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.3s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar { width: 0; }
+
+  // ----------------------------------------------------
+  // 💻 COMPORTAMENTO DESKTOP (Fixa na tela)
+  // ----------------------------------------------------
+  @media (min-width: 992px) {
     position: relative;
-    transition: width 0.3s ease;
+    transform: translateX(0) !important; // 👈 Garante que nunca suma no desktop
+    width: $sidebar-width;
 
-    // Estado Retraído
     &.collapsed {
-        width: 80px;
+      width: $sidebar-collapsed;
 
-        .brand {
-            padding: 2rem 0;
-            justify-content: center;
-        }
-
-        .menu-item {
-            justify-content: center;
-            padding: 0.75rem;
-            border-radius: 50%;
-        }
-
-        .sidebar-footer {
-            justify-content: center;
-            padding: 1.5rem 0;
-        }
-    }
-
-    .toggle-btn {
-        position: absolute;
-        right: -12px;
-        top: 30px;
-        width: 24px;
-        height: 24px;
-        background: var.$primary;
-        color: white;
-        border: none;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
+      .brand { padding: 2rem 0; justify-content: center; h1 { display: none; } }
+      .section-title { display: none; }
+      
+      .menu-item {
         justify-content: center;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        z-index: 10;
+        padding: 0.85rem;
+        margin: 0.5rem auto;
+        width: 48px;
+        border-radius: 12px;
+        .label { display: none; }
+      }
+
+      .sidebar-footer {
+        padding: 1.5rem 0;
+        justify-content: center;
+        .user-info { display: none; }
+      }
     }
+  }
 
-    .brand {
-        padding: 2rem;
-        display: flex;
-        align-items: center;
+  // ----------------------------------------------------
+  // 📱 COMPORTAMENTO MOBILE (Esconde/Desliza)
+  // ----------------------------------------------------
+  @media (max-width: 991px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px; // Um pouco mais larga no celular
+    transform: translateX(-100%); // Escondida fora da tela
+    box-shadow: none;
 
-        .logo-icon {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var.$primary;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 1.5rem;
-            color: var.$primary;
-            letter-spacing: -1px;
-        }
+    &.mobile-open {
+      transform: translateX(0); // 👈 Desliza para dentro
+      box-shadow: 20px 0 30px rgba(0, 0, 0, 0.5);
     }
+    
+    // No mobile, ignoramos o estado 'collapsed' para facilitar o toque
+    &.collapsed { width: 280px; } 
+  }
 
-    .nav-group {
-        flex: 1;
-        padding: 0 0.75rem;
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: var.$radius-md;
-            color: var.$text-secondary;
-            text-decoration: none;
-            transition: var.$transition;
-
-            .icon {
-                font-size: 1.25rem;
-                min-width: 24px;
-            }
-
-            .label {
-                margin-left: 12px;
-                white-space: nowrap;
-            }
-
-            &:hover {
-                background: var.$surface;
-                color: var.$text-primary;
-            }
-
-            &.active {
-                .sidebar-icon {
-                    color: var.$primary;
-                    // Um leve brilho (glow) roxo no ícone ativo
-                    filter: drop-shadow(0 0 4px rgba(108, 78, 255, 0.5));
-                }
-
-                background: rgba(108, 78, 255, 0.1);
-                color: var.$primary;
-                font-weight: 600;
-                border-left: 4px solid var.$primary;
-            }
-
-            &:hover:not(.active) {
-                .sidebar-icon {
-                    color: var.$text-primary;
-                }
-            }
-        }
-    }
-}
-
-.sidebar-footer {
-    padding: 1.5rem;
-    border-top: 1px solid var.$border;
+  // ----------------------------------------------------
+  // ELEMENTOS INTERNOS (Marca, Menu, Footer)
+  // ----------------------------------------------------
+  .brand {
+    padding: 2rem 1.5rem;
     display: flex;
     align-items: center;
     gap: 12px;
-
-    .user-badge {
-        min-width: 32px;
-        height: 32px;
-        background: var.$primary;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        color: white;
+    .brand-badge {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var.$primary, var.$primary-dark);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      .logo-icon { color: white; font-weight: 800; font-size: 1.2rem; }
     }
+    h1 { margin: 0; font-size: 1.5rem; color: var.$text-primary; font-weight: 700; }
+  }
+
+  .menu-section {
+    padding: 1rem 0;
+    .section-title {
+      padding: 0 2rem;
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      color: var.$text-secondary; letter-spacing: 1px; margin-bottom: 0.8rem; display: block;
+    }
+  }
+
+  .nav-group {
+    display: flex; flex-direction: column; padding: 0 1rem;
+    .menu-item {
+      display: flex; align-items: center;
+      padding: 0.85rem 1rem; margin-bottom: 0.25rem;
+      border-radius: 8px; color: var.$text-secondary;
+      text-decoration: none; transition: var.$transition;
+
+      .sidebar-icon { width: 20px; height: 20px; stroke-width: 2px; flex-shrink: 0; }
+      .label { margin-left: 12px; white-space: nowrap; font-size: 0.95rem; font-weight: 500; }
+
+      &:hover:not(.active) {
+        background: rgba(var.$primary, 0.05); color: var.$text-primary;
+        .sidebar-icon { color: var.$primary; }
+      }
+
+      &.active {
+        background: var.$primary; color: white;
+        box-shadow: 0 4px 15px rgba(108, 78, 255, 0.25);
+        .sidebar-icon { color: white; }
+      }
+    }
+  }
+
+  .spacer { flex: 1; }
+
+  .sidebar-footer {
+    padding: 1.5rem; display: flex; align-items: center; gap: 12px; margin-top: auto;
+    .user-badge {
+      min-width: 40px; height: 40px;
+      background: rgba(var.$primary, 0.2); color: var.$primary;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;
+    }
+    .user-info {
+      display: flex; flex-direction: column;
+      .user-name { font-size: 0.9rem; font-weight: 600; color: var.$text-primary; }
+      .user-role { font-size: 0.75rem; color: var.$text-secondary; }
+    }
+  }
+}
+
+.mobile-only {
+  display: none;
+  @media (max-width: 991px) {
+    display: block;
+  }
+}
+
+.mobile-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(var.$border, 0.3);
+  margin-bottom: 1rem;
+
+  .btn-close-sidebar {
+    background: none;
+    border: none;
+    color: var.$primary;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0;
+
+    lucide-icon {
+      width: 20px;
+      height: 20px;
+    }
+  }
 }

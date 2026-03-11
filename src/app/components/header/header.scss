@@ -1,0 +1,207 @@
+@use 'variables' as var;
+
+.top-header {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  background: var.$background; // Pode mudar para $surface se quiser o fundo diferente da página
+  border-bottom: 1px solid rgba(var.$border, 0.4);
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+// O botão hambúrguer só aparece no celular
+.menu-btn {
+  display: none;
+  @media (max-width: 992px) { display: flex; }
+}
+
+// Estilo Base dos Botões de Ação
+.action-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var.$text-secondary;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var.$transition;
+  position: relative;
+
+  lucide-icon { width: 20px; height: 20px; stroke-width: 2px; }
+
+  &:hover, &.active {
+    background: rgba(var.$primary, 0.1);
+    color: var.$primary;
+  }
+
+  // A bolinha vermelha/amarela em cima do ícone
+  .badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var.$background; // Borda na cor do fundo para recortar o ícone
+
+    &.warning { background: #F59E0B; }
+    &.danger { background: #EF4444; }
+  }
+}
+
+// ------------------------------------------------
+// DROPDOWNS (Mensagens e Notificações)
+// ------------------------------------------------
+.dropdown-container {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  width: 320px;
+  background: var.$surface;
+  border: 1px solid var.$border;
+  border-radius: var.$radius-lg;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  overflow: hidden;
+
+  // Header do Dropdown (Title + Badge)
+  .dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem;
+    border-bottom: 1px solid rgba(var.$border, 0.5);
+
+    h3 { margin: 0; font-size: 1.1rem; color: var.$text-primary; }
+    
+    .badge-pill {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      &.warning { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
+      &.info { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+    }
+  }
+
+  // Lista de Itens
+  .dropdown-list {
+    max-height: 300px;
+    overflow-y: auto;
+
+    .list-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem 1.25rem;
+      gap: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+      border-bottom: 1px solid rgba(var.$border, 0.3);
+
+      &:hover { background: rgba(var.$primary, 0.05); }
+
+      .avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; }
+      .avatar.img-1 { background: #3B82F6; }
+      .avatar.img-2 { background: #EC4899; }
+
+      .icon-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        lucide-icon { width: 20px; height: 20px; }
+        &.info { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+        &.warning { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
+      }
+
+      .item-content {
+        flex: 1;
+        h4 { margin: 0; font-size: 0.9rem; color: var.$text-primary; font-weight: 600; }
+        p { margin: 2px 0 0; font-size: 0.8rem; color: var.$text-secondary; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
+      }
+
+      .time { font-size: 0.7rem; color: var.$text-secondary; }
+    }
+  }
+
+  // Botão Inferior
+  .btn-block {
+    width: 100%;
+    padding: 12px;
+    background: var.$primary;
+    color: white;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    &:hover { background: var.$primary-dark; }
+  }
+
+  // Responsividade do Menu no Celular
+  @media (max-width: 480px) {
+    position: fixed;
+    top: 70px;
+    left: 10px;
+    right: 10px;
+    width: auto;
+  }
+}
+
+// Avatar do Usuário (Canto Direito)
+.user-profile {
+  margin-left: 0.5rem;
+  cursor: pointer;
+  .avatar-profile {
+    width: 36px;
+    height: 36px;
+    background: var.$primary;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(108, 78, 255, 0.3);
+  }
+}
+
+
+.mobile-only {
+  display: none;
+  @media (max-width: 991px) {
+    display: flex;
+  }
+}
+
+.back-btn {
+  color: var.$primary;
+  margin-left: 0.5rem;
+}
+
+.page-title-mobile {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var.$text-primary;
+  margin-left: 0.5rem;
+}

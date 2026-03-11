@@ -1,11 +1,13 @@
 @use 'variables' as var; // Certifique-se que o caminho para o seu _variables.scss está correto
 
+
 .layout-wrapper {
-  display: flex;       // Sidebar e Main lado a lado
+  display: flex;
   height: 100vh;
+  height: 100dvh; // Suporte preciso para celulares
   width: 100vw;
-  background-color: var.$background;
-  overflow: hidden;
+  overflow: hidden; // Impede scroll na janela inteira
+  background: var.$background;
 }
 
 .sidebar-container {
@@ -97,7 +99,52 @@
 }
 
 .main-content {
-  flex: 1;             // Ocupa o resto da tela
-  overflow-y: auto;    // Scroll só no conteúdo do dashboard
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; // Evita que tabelas grandes quebrem o flexbox
+}
+
+.page-content {
+  flex: 1;
   padding: 2rem;
+  overflow-y: auto; // O scroll acontece APENAS aqui dentro
+  
+  // Estilização sofisticada da barra de rolagem
+  &::-webkit-scrollbar { width: 6px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { 
+    background: rgba(var.$border, 0.5); 
+    border-radius: 10px; 
+    &:hover { background: rgba(var.$text-secondary, 0.5); }
+  }
+
+  @media (max-width: 992px) {
+    padding: 1rem; // Menos respiro no celular
+  }
+}
+
+// .mobile-backdrop {
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   width: 100vw;
+//   height: 100vh;
+//   background: rgba(0, 0, 0, 0.6);
+//   backdrop-filter: blur(2px); // Deixa o fundo embaçado (Efeito Apple)
+//   z-index: 90; // Acima do conteúdo, mas abaixo da Sidebar (z-index 100)
+//   cursor: pointer;
+// }
+
+.mobile-backdrop {
+  display: none; // Escondido por padrão
+  cursor: pointer;
+  @media (max-width: 991px) {
+    display: block; // Só ganha vida no mobile
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 90;
+  }
 }

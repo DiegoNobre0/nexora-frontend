@@ -1,9 +1,19 @@
 <div class="layout-wrapper">
   
-  <app-sidebar></app-sidebar> 
+  @if (isMobileMenuOpen()) {
+    <div class="mobile-backdrop" (click)="closeMobileMenu()"></div>
+  }
 
-  <main class="main-content">
-    <router-outlet></router-outlet>
-  </main>
+  <app-sidebar 
+    [isCollapsed]="isCollapsed()" 
+    [isMobileOpen]="isMobileMenuOpen()">
+  </app-sidebar> 
 
+  <div class="main-content">
+    <app-header (toggleMenu)="toggleMenu()"></app-header>
+    
+    <main class="page-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
 </div>
