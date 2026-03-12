@@ -1,8 +1,11 @@
 <div class="login-page-wrapper">
+  
   <div class="brand-section">
+    <img src="logo.png" class="giant-bg-logo" alt="Nexora Marca d'água">
+    
     <div class="brand-content">
       <h1 class="welcome-title">Seja bem-vindo ao <span class="highlight">NEXORA</span></h1>
-      <p class="welcome-text">NEXORA unifica agendamento, financeiro e IA para salões modernos e eficientes.</p>
+      <p class="welcome-text">NEXORA unifica agendamento, financeiro e IA para salões e clínicas modernos e eficientes.</p>
       <button class="btn-learn-more">Saiba Mais</button>
     </div>
     <div class="abstract-graphic"></div>
@@ -10,38 +13,18 @@
 
   <div class="form-section">
     <div class="login-card">
+      
       <header class="card-header">
-        <div class="brand-badge">
-          <lucide-icon name="circle" class="circle-bg"></lucide-icon>
-          <span class="n-logo">N</span>
-        </div>
-        <h2>Sign In</h2>
-        <p>Seu Painel de Administração</p>
+        <img src="logo.png" class="logo" alt="Logo Nexora">
+        
+        <!-- <h2>Login</h2>
+        <p>Seu Painel de Administração</p> -->
       </header>
-<!-- 
-      <div class="social-login">
-        <button class="btn-social google">
-          <img src="https://authjs.dev/img/providers/google.svg" alt="Google" width="18">
-          Google
-        </button>
-        <button class="btn-social facebook">
-          <img src="https://authjs.dev/img/providers/facebook.svg" alt="Facebook" width="18">
-          Facebook
-        </button>
-      </div>
-
-      <div class="separator">
-        <span class="text">ou entre com</span>
-      </div>
-
-      <div class="mock-credentials">
-        <p>admin@nexora.com || admin123</p>
-      </div> -->
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
         <div class="form-group">
           <label>E-mail</label>
-          <input type="email" formControlName="email" placeholder="seu@email.com" class="nexora-input">
+          <input type="email" formControlName="email" placeholder="diego@nexora.com" class="nexora-input">
         </div>
 
         <div class="form-group">

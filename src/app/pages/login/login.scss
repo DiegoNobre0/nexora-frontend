@@ -1,33 +1,84 @@
 @use 'variables' as var;
 
+// ==========================================
+// 1. WRAPPER PRINCIPAL
+// ==========================================
 .login-page-wrapper {
-  height: 100dvh; // Garante altura exata do dispositivo
+  height: 100dvh;
   width: 100%;
   display: flex;
   background-color: var.$background;
-  overflow: hidden; // Mata qualquer tentativa de scroll
+  overflow: hidden;
 }
 
+// ==========================================
+// 2. LADO ESQUERDO: BRANDING (Só Desktop)
+// ==========================================
 .brand-section {
-  display: none; // Escondido por padrão (Mobile First)
-  flex: 1.2;
+  display: none;
   background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
   position: relative;
-  overflow: hidden;
+  overflow: hidden; // ISSO AQUI CORTA A LOGO PERFEITAMENTE
 
   @media (min-width: 1024px) {
-    display: flex; // Só aparece em telas grandes
+    display: flex;
+    flex: 1.2;
     align-items: center;
     justify-content: center;
     padding: 4rem;
   }
-  
+
+  // 🔥 A LOGO GIGANTE DO SEU MOCKUP
+  .giant-bg-logo {
+    position: absolute;
+    top: 20%;
+    
+    transform: translateY(-50%);
+    width: 50%; // Tamanho monstruoso
+    opacity: 0.9; // Forte o suficiente para destacar
+    pointer-events: none; // O mouse passa direto por ela
+    z-index: 1;
+    filter: drop-shadow(0 0 60px rgba(108, 78, 255, 0.4)); // Glow roxo gigante
+  }
+
   .brand-content {
     max-width: 480px;
-    z-index: 2;
-    .welcome-title { font-size: 3rem; font-weight: 800; color: var.$text-primary; line-height: 1.1; margin-bottom: 1.5rem; .highlight { color: var.$primary; } }
-    .welcome-text { color: var.$text-secondary; font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem; }
-    .btn-learn-more { background: var.$primary; color: white; border: none; padding: 12px 30px; border-radius: var.$radius-md; font-weight: 600; cursor: pointer; }
+    z-index: 2; // Fica por cima da logo gigante
+    position: relative;
+
+    .welcome-title {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var.$text-primary;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+
+      .highlight {
+        color: var.$primary;
+      }
+    }
+
+    .welcome-text {
+      color: var.$text-secondary;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .btn-learn-more {
+      background: var.$primary;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: var.$radius-md;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+
+      &:hover {
+        background: var.$primary-dark;
+      }
+    }
   }
 
   .abstract-graphic {
@@ -38,127 +89,201 @@
     height: 600px;
     background: radial-gradient(circle, rgba(108, 78, 255, 0.15) 0%, transparent 70%);
     filter: blur(60px);
+    z-index: 0;
   }
 }
 
+// ==========================================
+// 3. LADO DIREITO: FORMULÁRIO (Todas as telas)
+// ==========================================
 .form-section {
-  // flex: 1;
   display: flex;
-  width: 50%;
+  flex: 1;
   align-items: center;
   justify-content: center;
-  padding: 1rem 0rem 1rem 0rem;
   background-color: #020617;
+  padding: 1.5rem;
+
+  @media (min-width: 1024px) {
+    padding: 3rem;
+  }
 
   .login-card {
     width: 100%;
-    // max-width: 420px;
+    max-width: 420px;
     background: var.$surface;
-    padding: 10rem;
+    padding: 2.5rem 2rem;
     border-radius: var.$radius-lg;
     border: 1px solid var.$border;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
 
     @media (max-width: 480px) {
-      padding: 1.5rem;
-      border: none; // No celular removemos borda para parecer App Nativo
+      padding: 1rem;
+      border: none;
       background: transparent;
       box-shadow: none;
     }
 
+    // CABEÇALHO DO CARTÃO CENTRALIZADO
+    // CABEÇALHO DO CARTÃO
     .card-header {
       text-align: center;
-      margin-bottom: 1.5rem;
-      .brand-badge {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1rem;
-        color: var.$primary;
-        .circle-bg { width: 54px; height: 54px; opacity: 0.2; }
-        .n-logo { position: absolute; font-size: 1.6rem; font-weight: 900; }
+      margin-bottom: 2rem;
+      height: 5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      // A LOGO DO FORMULÁRIO (Agora fora do brand-badge)
+      .logo {
+        height: 15rem;
+        width: auto;
+        padding-top: 3rem;
+        object-fit: contain;
+        margin-bottom: 1.5rem;
+        // Brilho roxo elegante na transparência do PNG
+        // filter: drop-shadow(0 8px 16px rgba(108, 78, 255, 0.4));
+        transition: transform 0.3s ease;
+
+        &:hover {
+          transform: scale(1.05); // Pulsada suave
+        }
       }
-      h2 { font-size: 1.6rem; color: var.$text-primary; margin: 0; }
-      p { color: var.$text-secondary; font-size: 0.85rem; }
+
+      h2 {
+        font-size: 1.8rem;
+        color: var.$text-primary;
+        margin: 0 0 0.5rem 0;
+        font-weight: 700;
+      }
+
+      p {
+        color: var.$text-secondary;
+        font-size: 0.9rem;
+        margin: 0;
+      }
     }
   }
 }
 
-.social-login {
-  display: flex;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-  .btn-social {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var.$border;
-    color: var.$text-primary;
-    padding: 10px;
-    border-radius: var.$radius-md;
-    font-size: 0.85rem;
-    cursor: pointer;
-    &:hover { border-color: var.$primary; }
-  }
-}
-
-.separator {
-  text-align: center;
-  position: relative;
-  margin-bottom: 1.5rem;
-  &::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: var.$border; }
-  .text { background: var.$surface; padding: 0 0.75rem; color: var.$text-secondary; font-size: 0.75rem; position: relative; z-index: 2; }
-}
-
-.mock-credentials {
-  background: rgba(108, 78, 255, 0.05);
-  border: 1px dashed rgba(108, 78, 255, 0.3);
-  padding: 0.75rem;
-  border-radius: var.$radius-md;
-  color: var.$primary;
-  text-align: center;
-  font-size: 0.8rem;
-  margin-bottom: 1.5rem;
-}
-
+// ==========================================
+// 4. ELEMENTOS INTERNOS DO FORM
+// ==========================================
 .login-form {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+
   .form-group {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
-    label { font-size: 0.85rem; color: var.$text-primary; font-weight: 500; }
-    .label-wrapper { display: flex; justify-content: space-between; .forgot-link { font-size: 0.75rem; color: var.$primary; text-decoration: none; } }
+    gap: 0.5rem;
+
+    label {
+      font-size: 0.85rem;
+      color: var.$text-primary;
+      font-weight: 500;
+    }
+
+    .label-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .forgot-link {
+        font-size: 0.8rem;
+        color: var.$primary;
+        text-decoration: none;
+        font-weight: 500;
+
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+
+  .nexora-input {
+    background: #020617;
+    border: 1px solid var.$border;
+    padding: 14px 16px;
+    border-radius: 8px;
+    color: white;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var.$primary;
+      box-shadow: 0 0 0 3px rgba(108, 78, 255, 0.15);
+    }
+  }
+
+  .form-options {
+    font-size: 0.85rem;
+    color: var.$text-secondary;
+
+    .checkbox-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+
+      input[type="checkbox"] {
+        accent-color: var.$primary;
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .btn-login {
+    background: var.$primary;
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 0.5rem;
+
+    &:hover:not(:disabled) {
+      background: var.$primary-dark;
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
   }
 }
 
-.nexora-input {
-  background: #020617;
-  border: 1px solid var.$border;
-  padding: 12px;
-  border-radius: 8px;
-  color: white;
-  &:focus { outline: none; border-color: var.$primary; }
+.card-footer {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: var.$text-secondary;
+
+  .highlight-link {
+    color: var.$primary;
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
-
-.form-options { font-size: 0.8rem; color: var.$text-secondary; .checkbox-wrapper { display: flex; align-items: center; gap: 8px; } }
-
-.btn-login {
-  background: var.$primary;
-  color: white;
-  border: none;
-  padding: 14px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  &:hover { background: var.$primary-dark; }
-  &:disabled { opacity: 0.4; }
-}
-
-.card-footer { text-align: center; margin-top: 1.5rem; font-size: 0.85rem; color: var.$text-secondary; .highlight-link { color: var.$primary; text-decoration: none; font-weight: 600; } }

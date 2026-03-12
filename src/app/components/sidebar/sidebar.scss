@@ -20,7 +20,9 @@ $sidebar-collapsed: 85px;
   overflow-y: auto;
   overflow-x: hidden;
 
-  &::-webkit-scrollbar { width: 0; }
+  &::-webkit-scrollbar {
+    width: 0;
+  }
 
   // ----------------------------------------------------
   // 💻 COMPORTAMENTO DESKTOP (Fixa na tela)
@@ -33,22 +35,38 @@ $sidebar-collapsed: 85px;
     &.collapsed {
       width: $sidebar-collapsed;
 
-      .brand { padding: 2rem 0; justify-content: center; h1 { display: none; } }
-      .section-title { display: none; }
-      
+      .brand {
+        padding: 2rem 0;
+        justify-content: center;
+
+        h1 {
+          display: none;
+        }
+      }
+
+      .section-title {
+        display: none;
+      }
+
       .menu-item {
         justify-content: center;
         padding: 0.85rem;
         margin: 0.5rem auto;
         width: 48px;
         border-radius: 12px;
-        .label { display: none; }
+
+        .label {
+          display: none;
+        }
       }
 
       .sidebar-footer {
         padding: 1.5rem 0;
         justify-content: center;
-        .user-info { display: none; }
+
+        .user-info {
+          display: none;
+        }
       }
     }
   }
@@ -68,81 +86,160 @@ $sidebar-collapsed: 85px;
       transform: translateX(0); // 👈 Desliza para dentro
       box-shadow: 20px 0 30px rgba(0, 0, 0, 0.5);
     }
-    
+
     // No mobile, ignoramos o estado 'collapsed' para facilitar o toque
-    &.collapsed { width: 280px; } 
+    &.collapsed {
+      width: 280px;
+    }
   }
 
+
   // ----------------------------------------------------
-  // ELEMENTOS INTERNOS (Marca, Menu, Footer)
+  // MARCA (LOGO)
   // ----------------------------------------------------
   .brand {
-    padding: 2rem 1.5rem;
+    
     display: flex;
     align-items: center;
-    gap: 12px;
-    .brand-badge {
-      width: 36px; height: 36px;
-      background: linear-gradient(135deg, var.$primary, var.$primary-dark);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      .logo-icon { color: white; font-weight: 800; font-size: 1.2rem; }
+    justify-content: flex-start;
+    min-height: 90px; // Mantém a altura fixa para evitar pulos quando abre/fecha
+    transition: var.$transition;
+
+    // Estilo da Logo Inteira (Sidebar Aberta)
+    .brand-full {
+      width: 16rem;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(108, 78, 255, 0.2)); // Glow sutil
+      animation: fadeIn 0.3s ease-in-out;
     }
-    h1 { margin: 0; font-size: 1.5rem; color: var.$text-primary; font-weight: 700; }
+
+    // Estilo da Logo Cortada (Sidebar Fechada)
+    .brand-icon {
+      width: 42px; // Tamanho ideal para caber na sidebar fechada
+      height: auto;
+      max-height: 42px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(108, 78, 255, 0.3)); // Glow sutil mais forte
+      animation: fadeIn 0.3s ease-in-out;
+    }
+  }
+
+  // Suaviza a troca das logos
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
   }
 
   .menu-section {
     padding: 1rem 0;
+
     .section-title {
       padding: 0 2rem;
-      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
-      color: var.$text-secondary; letter-spacing: 1px; margin-bottom: 0.8rem; display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var.$text-secondary;
+      letter-spacing: 1px;
+      margin-bottom: 0.8rem;
+      display: block;
     }
   }
 
   .nav-group {
-    display: flex; flex-direction: column; padding: 0 1rem;
-    .menu-item {
-      display: flex; align-items: center;
-      padding: 0.85rem 1rem; margin-bottom: 0.25rem;
-      border-radius: 8px; color: var.$text-secondary;
-      text-decoration: none; transition: var.$transition;
+    display: flex;
+    flex-direction: column;
+    padding: 0 1rem;
 
-      .sidebar-icon { width: 20px; height: 20px; stroke-width: 2px; flex-shrink: 0; }
-      .label { margin-left: 12px; white-space: nowrap; font-size: 0.95rem; font-weight: 500; }
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 0.85rem 1rem;
+      margin-bottom: 0.25rem;
+      border-radius: 8px;
+      color: var.$text-secondary;
+      text-decoration: none;
+      transition: var.$transition;
+
+      .sidebar-icon {
+        width: 20px;
+        height: 20px;
+        stroke-width: 2px;
+        flex-shrink: 0;
+      }
+
+      .label {
+        margin-left: 12px;
+        white-space: nowrap;
+        font-size: 0.95rem;
+        font-weight: 500;
+      }
 
       &:hover:not(.active) {
-        background: rgba(var.$primary, 0.05); color: var.$text-primary;
-        .sidebar-icon { color: var.$primary; }
+        background: rgba(var.$primary, 0.05);
+        color: var.$text-primary;
+
+        .sidebar-icon {
+          color: var.$primary;
+        }
       }
 
       &.active {
-        background: var.$primary; color: white;
+        background: var.$primary;
+        color: white;
         box-shadow: 0 4px 15px rgba(108, 78, 255, 0.25);
-        .sidebar-icon { color: white; }
+
+        .sidebar-icon {
+          color: white;
+        }
       }
     }
   }
 
-  .spacer { flex: 1; }
+  .spacer {
+    flex: 1;
+  }
 
   .sidebar-footer {
-    padding: 1.5rem; display: flex; align-items: center; gap: 12px; margin-top: auto;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: auto;
+
     .user-badge {
-      min-width: 40px; height: 40px;
-      background: rgba(var.$primary, 0.2); color: var.$primary;
-      border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;
+      min-width: 40px;
+      height: 40px;
+      background: rgba(var.$primary, 0.2);
+      color: var.$primary;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
     }
+
     .user-info {
-      display: flex; flex-direction: column;
-      .user-name { font-size: 0.9rem; font-weight: 600; color: var.$text-primary; }
-      .user-role { font-size: 0.75rem; color: var.$text-secondary; }
+      display: flex;
+      flex-direction: column;
+
+      .user-name {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var.$text-primary;
+      }
+
+      .user-role {
+        font-size: 0.75rem;
+        color: var.$text-secondary;
+      }
     }
   }
 }
 
 .mobile-only {
   display: none;
+
   @media (max-width: 991px) {
     display: block;
   }

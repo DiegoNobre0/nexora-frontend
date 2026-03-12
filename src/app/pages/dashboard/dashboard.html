@@ -14,17 +14,20 @@
       <div class="welcome-illustration"><lucide-icon name="bot" class="ai-icon"></lucide-icon></div>
     </div>
 
-    <div class="metric-card card-green">
-      <div class="card-icon-wrapper"><lucide-icon name="dollar-sign"></lucide-icon></div>
+
+
+    <div class="metric-card card-blue col-span-1">
+      <div class="card-icon-wrapper"><lucide-icon name="users"></lucide-icon></div>
       <div class="card-info">
-        <h3 class="value">R$ 1.280,00</h3>
-        <span class="label">Receita Hoje</span>
+        <h3 class="value">24</h3>
+        <span class="label">Novos Clientes</span>
       </div>
       <div class="card-footer">
-        <span class="trend positive"><lucide-icon name="trending-up"></lucide-icon> +12%</span>
-        <span class="compare">vs ontem</span>
+        <span class="trend positive"><lucide-icon name="trending-up"></lucide-icon> Destaque</span>
+        <span class="compare">na semana</span>
       </div>
     </div>
+
 
     <div class="metric-card card-purple">
       <div class="card-icon-wrapper"><lucide-icon name="calendar"></lucide-icon></div>
@@ -37,6 +40,19 @@
       </div>
     </div>
 
+    <div class="metric-card card-green">
+      <div class="card-icon-wrapper"><lucide-icon name="dollar-sign"></lucide-icon></div>
+      <div class="card-info">
+        <h3 class="value">R$ 1.280,00</h3>
+        <span class="label">Receita Hoje</span>
+      </div>
+      <div class="card-footer">
+        <span class="trend positive"><lucide-icon name="trending-up"></lucide-icon> +12%</span>
+        <span class="compare">vs ontem</span>
+      </div>
+    </div>
+
+
     <div class="chart-section nexora-card col-span-3">
       <div class="chart-header">
         <div class="header-main">
@@ -48,10 +64,10 @@
             </div>
           </div>
 
-         <div class="filter-group">
+          <div class="filter-group">
 
             <div class="datepicker-wrapper">
-              
+
               <div class="custom-datepicker" [class.active]="!isCurrentWeek" (click)="picker.open()">
                 <lucide-icon name="calendar" class="icon"></lucide-icon>
                 <span class="display-value">{{ displayMonthYear }}</span>
@@ -60,9 +76,7 @@
 
               <mat-form-field class="hidden-mat-input">
                 <input matInput [matDatepicker]="picker">
-                <mat-datepicker #picker 
-                                startView="multi-year" 
-                                (monthSelected)="onMonthSelected($event, picker)">
+                <mat-datepicker #picker startView="multi-year" (monthSelected)="onMonthSelected($event, picker)">
                 </mat-datepicker>
               </mat-form-field>
 
@@ -96,17 +110,6 @@
       </div>
     </div>
 
-    <div class="metric-card card-blue col-span-1">
-      <div class="card-icon-wrapper"><lucide-icon name="users"></lucide-icon></div>
-      <div class="card-info">
-        <h3 class="value">24</h3>
-        <span class="label">Novos Clientes</span>
-      </div>
-      <div class="card-footer">
-        <span class="trend positive"><lucide-icon name="trending-up"></lucide-icon> Destaque</span>
-        <span class="compare">na semana</span>
-      </div>
-    </div>
 
     <div class="table-card col-span-2">
       <div class="card-header-flex">

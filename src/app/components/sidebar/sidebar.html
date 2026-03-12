@@ -8,10 +8,9 @@
   </div> -->
 
   <div class="brand">
-    <div class="brand-badge">
-      <span class="logo-icon">N</span>
-    </div>
-    <h1 *ngIf="!isCollapsed()">EXORA</h1>
+    <img *ngIf="isCollapsed()" src="logo2.png" class="brand-icon" alt="Ícone Nexora">
+    
+    <img *ngIf="!isCollapsed()" src="logo.png" class="brand-full" alt="Logo Nexora">
   </div>
 
   <div class="menu-section">
