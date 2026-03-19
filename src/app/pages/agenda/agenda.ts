@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, signal, OnInit } from '@angular/core';
+import { Component, computed, signal, OnInit, HostListener } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
 
 export type AppointmentStatus = 'pendente' | 'confirmado' | 'cancelado';
@@ -17,8 +17,8 @@ export interface Appointment {
   servicoNome: string;
   profissionalId: string;
   dataStr: string;
-  horaInicio: string; 
-  duracaoMinutos: number; 
+  horaInicio: string;
+  duracaoMinutos: number;
   status: AppointmentStatus;
 }
 
@@ -32,15 +32,44 @@ export interface Appointment {
 export class Agenda implements OnInit {
   dataSelecionada = signal(new Date());
   viewMode = signal<'dia' | 'semana'>('dia');
-  
+
   dataFiltro = computed(() => this.dataSelecionada().toISOString().split('T')[0]);
 
-  // Horários (08:00 às 20:00 - Slots de 30min)
-  horarios = Array.from({ length: 25 }, (_, i) => {
-    const h = Math.floor(i / 2) + 8;
-    const m = i % 2 === 0 ? '00' : '30';
-    return `${h.toString().padStart(2, '0')}:${m}`;
-  });
+
+  // ⚙️ CONFIGURAÇÃO DO CLIENTE (No futuro, você busca isso da sua API)
+  configSalao = {
+    horaAbertura: 8,  // 08:00
+    horaFechamento: 20, // 20:00
+    intervaloMinutos: 15 // Pula de 15 em 15 minutos
+  };
+
+  horarios = this.gerarGradeHorarios(
+    this.configSalao.horaAbertura,
+    this.configSalao.horaFechamento,
+    this.configSalao.intervaloMinutos
+  );
+
+  gerarGradeHorarios(inicio: number, fim: number, intervalo: number): string[] {
+    const grade: string[] = [];
+    let horaAtual = inicio;
+    let minutoAtual = 0;
+
+    // Roda o loop até chegar na hora de fechamento
+    while (horaAtual < fim || (horaAtual === fim && minutoAtual === 0)) {
+      const hStr = horaAtual.toString().padStart(2, '0');
+      const mStr = minutoAtual.toString().padStart(2, '0');
+      grade.push(`${hStr}:${mStr}`);
+
+      minutoAtual += intervalo;
+
+      // Vira a hora quando passa de 59 minutos
+      if (minutoAtual >= 60) {
+        minutoAtual -= 60;
+        horaAtual++;
+      }
+    }
+    return grade;
+  }
 
   profissionais = signal<Profissional[]>([
     { id: '1', nome: 'Diego Nobre', avatar: 'DN', cor: '#6C4EFF' },
@@ -61,20 +90,11 @@ export class Agenda implements OnInit {
   });
 
   now = signal(new Date());
-  
-  // Linha do tempo animada (Soma 80px do Header)
-  linePosition = computed(() => {
-    const time = this.now();
-    const hours = time.getHours();
-    const minutes = time.getMinutes();
-    if (hours < 8 || hours > 20 || this.dataFiltro() !== new Date().toISOString().split('T')[0]) return -1;
-    
-    const totalMinutos = ((hours - 8) * 60) + minutes;
-    return (totalMinutos * 2) + 80; 
-  });
+
 
   ngOnInit() {
     setInterval(() => this.now.set(new Date()), 60000);
+    this.calcularFatorPixels();
   }
 
   navegar(dias: number) {
@@ -88,19 +108,23 @@ export class Agenda implements OnInit {
   // Retorna a coluna exata usando grid-column
   getColumnIndex(profissionalId: string): string {
     const index = this.profissionais().findIndex(p => p.id === profissionalId);
-    return `${index + 2} / span 1`; 
+    return `${index + 2} / span 1`;
   }
 
-  // 1 min = 2px. Subtraímos 8h (início), multiplicamos e SOMAMOS OS 80px DO CABEÇALHO.
+  private fatorPixelsPorMinuto = 0;
+
+
   getTopPosition(horaInicio: string): number {
     const [h, m] = horaInicio.split(':').map(Number);
-    const minutosDesdeAs8 = ((h - 8) * 60) + m;
-    return (minutosDesdeAs8 * 2) + 80; 
+    const minutosDesdaAbertura = ((h - this.configSalao.horaAbertura) * 60) + m;
+    return (minutosDesdaAbertura * this.fatorPixelsPorMinuto) + 80;
   }
 
-  // Altura proporcional: 15 min = 30px
-  getHeight(duracaoMinutos: number): number {
-    return duracaoMinutos * 2;
+  getHeight(duracaoMinutos: number): number {  
+    // Para a altura bater com os blocos que ela cobre
+   let altura = duracaoMinutos * this.fatorPixelsPorMinuto;
+   let alturaReajuste = altura - 15 //estava passando 15px para baixo, com isso não estava enquadrando.
+    return alturaReajuste
   }
 
   calcularFim(horaInicio: string, duracaoMinutos: number): string {
@@ -115,8 +139,32 @@ export class Agenda implements OnInit {
     return (h * 60) + m;
   }
 
+  // Linha do tempo animada com o novo fator
+  linePosition = computed(() => {
+    const time = this.now();
+    const hours = time.getHours();
+    const minutes = time.getMinutes();
+    if (hours < this.configSalao.horaAbertura || hours > this.configSalao.horaFechamento
+      || this.dataFiltro() !== new Date().toISOString().split('T')[0]) return -1;
+
+    // ✅ usa horaAbertura do config, não o 8 hardcoded
+    const totalMinutos = ((hours - this.configSalao.horaAbertura) * 60) + minutes;
+    return (totalMinutos * this.fatorPixelsPorMinuto) + 80;
+  });
+
+  @HostListener('window:resize')
+  onResize() {
+    this.calcularFatorPixels();
+  }
+
+private calcularFatorPixels() {
+  const alturaCelula = 45; // px fixo definido no CSS
+  this.fatorPixelsPorMinuto = alturaCelula / this.configSalao.intervaloMinutos;
+  // 40 / 15 = 2.6667 px por minuto
+}
+
   // --- 🖱️ LÓGICA DE DRAG AND DROP KANBAN ---
-  
+
   draggedAppointment: Appointment | null = null;
 
   onDragStart(apt: Appointment) {
@@ -124,7 +172,7 @@ export class Agenda implements OnInit {
   }
 
   onDragOver(event: DragEvent) {
-    event.preventDefault(); 
+    event.preventDefault();
   }
 
   onDrop(event: DragEvent, profissionalId: string, novaHoraInicio: string) {
