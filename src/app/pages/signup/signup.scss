@@ -1,0 +1,319 @@
+@use 'variables' as var;
+
+.login-page-wrapper {
+    height: 100dvh;
+    width: 100%;
+    display: flex;
+    background-color: var.$background;
+    overflow: hidden;
+}
+
+// ==========================================
+// BRANDING (ESQUERDA)
+// ==========================================
+.brand-section {
+    display: none;
+    background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+    position: relative;
+    overflow: hidden;
+
+    @media (min-width: 1024px) {
+        display: flex;
+        flex: 1.2;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem;
+    }
+
+    .giant-bg-logo {
+        position: absolute;
+        top: 20%;
+        transform: translateY(-50%);
+        width: 50%;
+        opacity: 0.9;
+        pointer-events: none;
+        z-index: 1;
+        filter: drop-shadow(0 0 60px rgba(108, 78, 255, 0.4));
+    }
+
+    .brand-content {
+        max-width: 480px;
+        z-index: 2;
+        position: relative;
+
+        .welcome-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var.$text-primary;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+
+            .highlight {
+                color: var.$primary;
+            }
+        }
+
+        .welcome-text {
+            color: var.$text-secondary;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+    }
+
+    .abstract-graphic {
+        position: absolute;
+        bottom: -100px;
+        left: -100px;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(108, 78, 255, 0.15) 0%, transparent 70%);
+        filter: blur(60px);
+        z-index: 0;
+    }
+}
+
+// ==========================================
+// FORMULÁRIO (DIREITA)
+// ==========================================
+.form-section {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    background-color: #020617;
+    padding: 1.5rem;
+
+    @media (min-width: 1024px) {
+        padding: 3rem;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 460px; // Um pouco mais largo para acomodar as 2 colunas
+        max-height: 95vh; // Impede que o card vaze a tela
+        overflow-y: auto; // Permite rolar se a tela for pequena
+        background: var.$surface;
+        padding: 2.5rem 2rem;
+        border-radius: var.$radius-lg;
+        border: 1px solid var.$border;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+
+        // Esconde a barra de rolagem mas mantém o scroll funcional
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        @media (max-width: 480px) {
+            padding: 1rem;
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            max-height: none;
+            overflow-y: visible;
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            .logo {
+                height: 6rem;
+                width: auto;
+                object-fit: contain;
+                margin-bottom: 1rem;
+                transition: transform 0.3s ease;
+
+                &:hover {
+                    transform: scale(1.05);
+                }
+            }
+
+            h2 {
+                font-size: 1.6rem;
+                color: var.$text-primary;
+                margin: 0 0 0.5rem 0;
+                font-weight: 700;
+            }
+
+            p {
+                color: var.$text-secondary;
+                font-size: 0.9rem;
+                margin: 0;
+            }
+        }
+    }
+}
+
+// ==========================================
+// ELEMENTOS DO FORM
+// ==========================================
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem; // Gap levemente reduzido para o cadastro
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+
+        label {
+            font-size: 0.85rem;
+            color: var.$text-primary;
+            font-weight: 500;
+        }
+    }
+
+    // 🔥 NOVO: Coloca inputs lado a lado
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+
+        @media (max-width: 480px) {
+            grid-template-columns: 1fr; // No celular volta a ser 1 embaixo do outro
+        }
+    }
+
+    .nexora-input {
+        background: #020617;
+        border: 1px solid var.$border;
+        padding: 12px 14px;
+        border-radius: 8px;
+        color: white;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        &:focus {
+            outline: none;
+            border-color: var.$primary;
+            box-shadow: 0 0 0 3px rgba(108, 78, 255, 0.15);
+        }
+    }
+
+    .form-options {
+        font-size: 0.85rem;
+        color: var.$text-secondary;
+        margin-top: 0.5rem;
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+
+            input[type="checkbox"] {
+                accent-color: var.$primary;
+                width: 16px;
+                height: 16px;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .btn-login {
+        background: var.$primary;
+        color: white;
+        border: none;
+        padding: 16px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.1s;
+        margin-top: 0.5rem;
+
+        &:hover:not(:disabled) {
+            background: var.$primary-dark;
+        }
+
+        &:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+}
+
+.card-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var.$text-secondary;
+
+    .highlight-link {
+        color: var.$primary;
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.nexora-input { 
+    background: #020617; border: 1px solid var.$border; padding: 12px 14px; border-radius: 8px; color: white; font-size: 0.9rem; transition: all 0.2s; 
+    &::placeholder { color: rgba(255, 255, 255, 0.3); } 
+    &:focus { outline: none; border-color: var.$primary; box-shadow: 0 0 0 3px rgba(108, 78, 255, 0.15); } 
+    
+    // 🚨 Borda vermelha se estiver com erro
+    &.input-error {
+      border-color: #EF4444;
+      &:focus { box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15); }
+    }
+  }
+
+  // 👁️ Container do ícone de senha
+  .password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .nexora-input {
+      width: 100%;
+      padding-right: 40px; // Abre espaço para o ícone não encavalar no texto
+    }
+
+    .btn-toggle-pass {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      color: var.$text-secondary;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      transition: color 0.2s;
+
+      &:hover { color: var.$text-primary; }
+      lucide-icon { width: 18px; height: 18px; }
+    }
+  }
+
+  // ⚠️ Mensagem de erro em texto
+  .error-msg {
+    color: #EF4444; // Vermelho padrão
+    font-size: 0.75rem;
+    margin-top: -2px;
+    font-weight: 500;
+  }

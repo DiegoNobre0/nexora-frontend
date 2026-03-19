@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
+import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -11,19 +12,32 @@ import { LucideAngularModule } from 'lucide-angular';
   styleUrl: './login.scss'
 })
 export class Login {
-  private fb = inject(FormBuilder);
+  private formBuilder = inject(FormBuilder);
   private router = inject(Router);
+  private authService = inject(AuthService);
+  // private router = inject(Router);
+  isLoading = false;
 
-  loginForm = this.fb.group({
+  loginForm = this.formBuilder.group({
     email: ['diego@nexora.com', [Validators.required, Validators.email]],
     password: ['123456', [Validators.required, Validators.minLength(6)]]
   });
 
-  onSubmit() {
+onSubmit() {
     if (this.loginForm.valid) {
-      // 🚀 Mock de Login: Seta o token e vai pro Dashboard
-      localStorage.setItem('nexora_token', 'token_fake_diego_nobre');
-      this.router.navigate(['/dashboard']);
+      this.isLoading = true;
+      const { email, password } : any = this.loginForm.value;
+
+      this.authService.login(email, password).subscribe({
+        next: (res) => {
+          // Token e Usuário já foram salvos no LocalStorage pelo AuthService
+          this.router.navigate(['/dashboard']); 
+        },
+        error: (err) => {
+          this.isLoading = false;
+          alert(err.error?.error || 'Credenciais inválidas.');
+        }
+      });
     }
   }
 }

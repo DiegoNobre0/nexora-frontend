@@ -1,0 +1,79 @@
+<div class="login-page-wrapper">
+  
+  <div class="brand-section">
+    <img src="logo.png" class="giant-bg-logo" alt="Nexora Marca d'água">
+    <div class="brand-content">
+      <h1 class="welcome-title">Transforme seu <span class="highlight">Negócio</span></h1>
+      <p class="welcome-text">Junte-se ao NEXORA e tenha o controle total do seu salão ou clínica com a ajuda da Inteligência Artificial.</p>
+    </div>
+    <div class="abstract-graphic"></div>
+  </div>
+
+  <div class="form-section">
+    <div class="login-card signup-card">
+      
+      <header class="card-header">
+        <img src="logo.png" class="logo" alt="Logo Nexora">
+        <h2>Criar Conta</h2>
+        <p>Cadastre-se e configure seu espaço</p>
+      </header>
+
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="login-form">
+        
+        <div class="form-group">
+          <label>Nome do Estabelecimento</label>
+          <input type="text" formControlName="companyName" placeholder="Ex: Studio Nexora Hair" class="nexora-input" [class.input-error]="signupForm.get('companyName')?.invalid && signupForm.get('companyName')?.touched">
+          <span class="error-msg" *ngIf="signupForm.get('companyName')?.invalid && signupForm.get('companyName')?.touched">Nome do estabelecimento é obrigatório.</span>
+        </div>
+
+        <div class="form-group">
+          <label>Seu Nome Completo</label>
+          <input type="text" formControlName="userName" placeholder="Diego Nobre" class="nexora-input" [class.input-error]="signupForm.get('userName')?.invalid && signupForm.get('userName')?.touched">
+          <span class="error-msg" *ngIf="signupForm.get('userName')?.invalid && signupForm.get('userName')?.touched">Seu nome é obrigatório.</span>
+        </div>
+
+        <div class="form-group">
+          <label>E-mail de Acesso</label>
+          <input type="email" formControlName="email" placeholder="diego@nexora.com" class="nexora-input" [class.input-error]="signupForm.get('email')?.invalid && signupForm.get('email')?.touched">
+          <span class="error-msg" *ngIf="signupForm.get('email')?.hasError('required') && signupForm.get('email')?.touched">O e-mail é obrigatório.</span>
+          <span class="error-msg" *ngIf="signupForm.get('email')?.hasError('email') && signupForm.get('email')?.touched">Digite um e-mail válido.</span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>WhatsApp</label>
+            <input type="tel" formControlName="whatsapp" (input)="applyPhoneMask($event)" placeholder="(11) 99999-9999" maxlength="15" class="nexora-input" [class.input-error]="signupForm.get('whatsapp')?.invalid && signupForm.get('whatsapp')?.touched">
+            <span class="error-msg" *ngIf="signupForm.get('whatsapp')?.invalid && signupForm.get('whatsapp')?.touched">WhatsApp inválido.</span>
+          </div>
+
+          <div class="form-group">
+            <label>Senha Segura</label>
+            
+            <div class="password-wrapper">
+              <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="••••••••" class="nexora-input" [class.input-error]="signupForm.get('password')?.invalid && signupForm.get('password')?.touched">
+              <button type="button" class="btn-toggle-pass" (click)="togglePasswordVisibility()">
+                <lucide-icon [name]="showPassword ? 'eye-off' : 'eye'"></lucide-icon>
+              </button>
+            </div>
+
+            <span class="error-msg" *ngIf="signupForm.get('password')?.hasError('required') && signupForm.get('password')?.touched">A senha é obrigatória.</span>
+            <span class="error-msg" *ngIf="signupForm.get('password')?.hasError('minlength') && signupForm.get('password')?.touched">Mínimo de 6 caracteres.</span>
+          </div>
+        </div>
+
+        <div class="form-options">
+          <label class="checkbox-wrapper">
+            <input type="checkbox" formControlName="terms"> Li e concordo com os Termos de Uso
+          </label>
+          <span class="error-msg" style="display: block; margin-top: 4px;" *ngIf="signupForm.get('terms')?.invalid && signupForm.get('terms')?.touched">Você precisa aceitar os termos.</span>
+        </div>
+
+        <button type="submit" [disabled]="signupForm.invalid || isLoading">{{ isLoading ? 'Criando banco de dados...' : 'Criar minha conta' }}</button>
+      </form>
+
+      <footer class="card-footer">
+        <p>Já possui uma conta? <a routerLink="/login" class="highlight-link">Fazer Login</a></p>
+      </footer>
+    </div>
+  </div>
+</div>

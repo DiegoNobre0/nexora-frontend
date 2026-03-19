@@ -1,11 +1,12 @@
 <div class="login-page-wrapper">
-  
+
   <div class="brand-section">
     <img src="logo.png" class="giant-bg-logo" alt="Nexora Marca d'água">
-    
+
     <div class="brand-content">
       <h1 class="welcome-title">Seja bem-vindo ao <span class="highlight">NEXORA</span></h1>
-      <p class="welcome-text">NEXORA unifica agendamento, financeiro e IA para salões e clínicas modernos e eficientes.</p>
+      <p class="welcome-text">NEXORA unifica agendamento, financeiro e IA para salões e clínicas modernas e eficientes.
+      </p>
       <button class="btn-learn-more">Saiba Mais</button>
     </div>
     <div class="abstract-graphic"></div>
@@ -13,10 +14,10 @@
 
   <div class="form-section">
     <div class="login-card">
-      
+
       <header class="card-header">
         <img src="logo.png" class="logo" alt="Logo Nexora">
-        
+
         <!-- <h2>Login</h2>
         <p>Seu Painel de Administração</p> -->
       </header>
@@ -41,11 +42,11 @@
           </label>
         </div>
 
-        <button type="submit" class="btn-login" [disabled]="loginForm.invalid">Sign In</button>
+        <button type="submit" class="btn-login" [disabled]="loginForm.invalid">Entrar</button>
       </form>
 
       <footer class="card-footer">
-        <p>Novo no Nexora? <a href="#" class="highlight-link">Criar conta</a></p>
+        <p>Novo no Nexora? <a routerLink="/signup" class="highlight-link">Criar conta</a></p>
       </footer>
     </div>
   </div>
