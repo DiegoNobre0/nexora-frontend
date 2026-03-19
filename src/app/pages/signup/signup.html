@@ -68,7 +68,7 @@
           <span class="error-msg" style="display: block; margin-top: 4px;" *ngIf="signupForm.get('terms')?.invalid && signupForm.get('terms')?.touched">Você precisa aceitar os termos.</span>
         </div>
 
-        <button type="submit" [disabled]="signupForm.invalid || isLoading">{{ isLoading ? 'Criando banco de dados...' : 'Criar minha conta' }}</button>
+        <button class="btn-login" type="submit" [disabled]="signupForm.invalid || isLoading">{{ isLoading ? 'Criando sua empresa...' : 'Criar minha conta' }}</button>
       </form>
 
       <footer class="card-footer">

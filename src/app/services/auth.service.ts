@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
 // Altere para a porta que seu Fastify está rodando
-const API_URL = 'http://localhost:3000/auth'; 
+const API_URL = 'http://localhost:3333/auth'; 
 
 @Injectable({
   providedIn: 'root'
