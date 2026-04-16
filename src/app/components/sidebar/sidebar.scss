@@ -110,7 +110,8 @@ $sidebar-collapsed: 85px;
       width: 16rem;
       height: auto;
       object-fit: contain;
-      filter: drop-shadow(0 4px 12px rgba(108, 78, 255, 0.2)); // Glow sutil
+      // filter: drop-shadow(0 4px 12px rgba(108, 78, 255, 0.2)); 
+      filter: drop-shadow(0 4px 12px rgba(225, 255, 125, 0.15));
       animation: fadeIn 0.3s ease-in-out;
     }
 
@@ -120,7 +121,8 @@ $sidebar-collapsed: 85px;
       height: auto;
       max-height: 42px;
       object-fit: contain;
-      filter: drop-shadow(0 4px 12px rgba(108, 78, 255, 0.3)); // Glow sutil mais forte
+      // filter: drop-shadow(0 4px 12px rgba(108, 78, 255, 0.3)); 
+      filter: drop-shadow(0 4px 12px rgba(225, 255, 125, 0.25));
       animation: fadeIn 0.3s ease-in-out;
     }
   }
@@ -187,7 +189,7 @@ $sidebar-collapsed: 85px;
       &.active {
         background: var.$primary;
         color: white;
-        box-shadow: 0 4px 15px rgba(108, 78, 255, 0.25);
+        box-shadow: 0 4px 15px rgba(108, 78, 255, 0.25);        
 
         .sidebar-icon {
           color: white;
@@ -267,4 +269,61 @@ $sidebar-collapsed: 85px;
       height: 20px;
     }
   }
+}
+
+.submenu {
+  display: flex;
+  flex-direction: column;
+  padding-left: 3.2rem; // Recuo exato para alinhar com o texto do menu pai
+  padding-right: 1rem;
+  margin-top: -0.2rem;
+  margin-bottom: 0.5rem;
+  animation: slideDown 0.2s ease-out;
+
+  .submenu-item {
+    padding: 0.5rem 0.75rem;
+    color: var.$text-secondary;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: var.$transition;
+    position: relative;
+
+    // A bolinha lateral para dar um charme no submenu
+    &::before {
+      content: '';
+      position: absolute;
+      left: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: var.$transition;
+    }
+
+    &:hover {
+      color: var.$text-primary;
+      background: rgba(255, 255, 255, 0.05);
+      &::before {
+        background: var.$primary;
+      }
+    }
+
+    &.active {
+      color: var.$primary;
+      font-weight: 700;
+      &::before {
+        background: var.$primary;
+        box-shadow: 0 0 8px var.$primary;
+      }
+    }
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }

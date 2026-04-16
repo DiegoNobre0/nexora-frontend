@@ -33,7 +33,8 @@
         opacity: 0.9;
         pointer-events: none;
         z-index: 1;
-        filter: drop-shadow(0 0 60px rgba(108, 78, 255, 0.4));
+        // filter: drop-shadow(0 0 60px rgba(108, 78, 255, 0.4));
+        filter: drop-shadow(0 0 60px rgba(225, 255, 125, 0.25));
     }
 
     .brand-content {
@@ -67,7 +68,8 @@
         left: -100px;
         width: 600px;
         height: 600px;
-        background: radial-gradient(circle, rgba(108, 78, 255, 0.15) 0%, transparent 70%);
+        // background: radial-gradient(circle, rgba(108, 78, 255, 0.15) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(74, 208, 175, 0.15) 0%, transparent 70%);
         filter: blur(60px);
         z-index: 0;
     }
@@ -227,7 +229,7 @@
 
     .btn-login {
         background: var.$primary;
-        color: white;
+       color: white;
         border: none;
         padding: 16px;
         border-radius: 8px;
@@ -270,50 +272,74 @@
     }
 }
 
-.nexora-input { 
-    background: #020617; border: 1px solid var.$border; padding: 12px 14px; border-radius: 8px; color: white; font-size: 0.9rem; transition: all 0.2s; 
-    &::placeholder { color: rgba(255, 255, 255, 0.3); } 
-    &:focus { outline: none; border-color: var.$primary; box-shadow: 0 0 0 3px rgba(108, 78, 255, 0.15); } 
-    
+.nexora-input {
+    background: #020617;
+    border: 1px solid var.$border;
+    padding: 12px 14px;
+    border-radius: 8px;
+    color: white;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+
+    &::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+    }
+
+    &:focus {
+        outline: none;
+        border-color: var.$primary;
+        box-shadow: 0 0 0 3px rgba(108, 78, 255, 0.15);
+        
+    }
+
     // 🚨 Borda vermelha se estiver com erro
     &.input-error {
-      border-color: #EF4444;
-      &:focus { box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15); }
-    }
-  }
+        border-color: #EF4444;
 
-  // 👁️ Container do ícone de senha
-  .password-wrapper {
+        &:focus {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+        }
+    }
+}
+
+// 👁️ Container do ícone de senha
+.password-wrapper {
     position: relative;
     display: flex;
     align-items: center;
 
     .nexora-input {
-      width: 100%;
-      padding-right: 40px; // Abre espaço para o ícone não encavalar no texto
+        width: 100%;
+        padding-right: 40px; // Abre espaço para o ícone não encavalar no texto
     }
 
     .btn-toggle-pass {
-      position: absolute;
-      right: 12px;
-      background: none;
-      border: none;
-      color: var.$text-secondary;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      padding: 0;
-      transition: color 0.2s;
+        position: absolute;
+        right: 12px;
+        background: none;
+        border: none;
+        color: var.$text-secondary;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        padding: 0;
+        transition: color 0.2s;
 
-      &:hover { color: var.$text-primary; }
-      lucide-icon { width: 18px; height: 18px; }
+        &:hover {
+            color: var.$text-primary;
+        }
+
+        lucide-icon {
+            width: 18px;
+            height: 18px;
+        }
     }
-  }
+}
 
-  // ⚠️ Mensagem de erro em texto
-  .error-msg {
+// ⚠️ Mensagem de erro em texto
+.error-msg {
     color: #EF4444; // Vermelho padrão
     font-size: 0.75rem;
     margin-top: -2px;
     font-weight: 500;
-  }
+}

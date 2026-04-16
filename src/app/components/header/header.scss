@@ -10,7 +10,8 @@
   border-bottom: 1px solid rgba(var.$border, 0.4);
 }
 
-.header-left, .header-right {
+.header-left,
+.header-right {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -19,7 +20,10 @@
 // O botão hambúrguer só aparece no celular
 .menu-btn {
   display: none;
-  @media (max-width: 992px) { display: flex; }
+
+  @media (max-width: 992px) {
+    display: flex;
+  }
 }
 
 // Estilo Base dos Botões de Ação
@@ -37,9 +41,14 @@
   transition: var.$transition;
   position: relative;
 
-  lucide-icon { width: 20px; height: 20px; stroke-width: 2px; }
+  lucide-icon {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2px;
+  }
 
-  &:hover, &.active {
+  &:hover,
+  &.active {
     background: rgba(var.$primary, 0.1);
     color: var.$primary;
   }
@@ -60,8 +69,13 @@
     justify-content: center;
     border: 2px solid var.$background; // Borda na cor do fundo para recortar o ícone
 
-    &.warning { background: #F59E0B; }
-    &.danger { background: #EF4444; }
+    &.warning {
+      background: #F59E0B;
+    }
+
+    &.danger {
+      background: #EF4444;
+    }
   }
 }
 
@@ -92,15 +106,27 @@
     padding: 1.25rem;
     border-bottom: 1px solid rgba(var.$border, 0.5);
 
-    h3 { margin: 0; font-size: 1.1rem; color: var.$text-primary; }
-    
+    h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var.$text-primary;
+    }
+
     .badge-pill {
       padding: 4px 10px;
       border-radius: 20px;
       font-size: 0.75rem;
       font-weight: 700;
-      &.warning { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
-      &.info { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+
+      &.warning {
+        background: rgba(245, 158, 11, 0.1);
+        color: #F59E0B;
+      }
+
+      &.info {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3B82F6;
+      }
     }
   }
 
@@ -118,11 +144,28 @@
       transition: background 0.2s;
       border-bottom: 1px solid rgba(var.$border, 0.3);
 
-      &:hover { background: rgba(var.$primary, 0.05); }
+      &:hover {
+        background: rgba(var.$primary, 0.05);
+      }
 
-      .avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; }
-      .avatar.img-1 { background: #3B82F6; }
-      .avatar.img-2 { background: #EC4899; }
+      .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: white;
+      }
+
+      .avatar.img-1 {
+        background: #3B82F6;
+      }
+
+      .avatar.img-2 {
+        background: #EC4899;
+      }
 
       .icon-circle {
         width: 40px;
@@ -131,18 +174,48 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        lucide-icon { width: 20px; height: 20px; }
-        &.info { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
-        &.warning { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
+
+        lucide-icon {
+          width: 20px;
+          height: 20px;
+        }
+
+        &.info {
+          background: rgba(59, 130, 246, 0.1);
+          color: #3B82F6;
+        }
+
+        &.warning {
+          background: rgba(245, 158, 11, 0.1);
+          color: #F59E0B;
+        }
       }
 
       .item-content {
         flex: 1;
-        h4 { margin: 0; font-size: 0.9rem; color: var.$text-primary; font-weight: 600; }
-        p { margin: 2px 0 0; font-size: 0.8rem; color: var.$text-secondary; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
+
+        h4 {
+          margin: 0;
+          font-size: 0.9rem;
+          color: var.$text-primary;
+          font-weight: 600;
+        }
+
+        p {
+          margin: 2px 0 0;
+          font-size: 0.8rem;
+          color: var.$text-secondary;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 160px;
+        }
       }
 
-      .time { font-size: 0.7rem; color: var.$text-secondary; }
+      .time {
+        font-size: 0.7rem;
+        color: var.$text-secondary;
+      }
     }
   }
 
@@ -151,11 +224,14 @@
     width: 100%;
     padding: 12px;
     background: var.$primary;
-    color: white;
+    color: white; // 🔥 Texto escuro para botão Neon
     border: none;
-    font-weight: 600;
+    font-weight: 800;
     cursor: pointer;
-    &:hover { background: var.$primary-dark; }
+
+    &:hover {
+      background: var.$primary-dark;
+    }
   }
 
   // Responsividade do Menu no Celular
@@ -172,6 +248,7 @@
 .user-profile {
   margin-left: 0.5rem;
   cursor: pointer;
+
   .avatar-profile {
     width: 36px;
     height: 36px;
@@ -181,14 +258,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    box-shadow: 0 2px 8px rgba(108, 78, 255, 0.3);
+    font-weight: bold;    
+    box-shadow: 0 2px 8px rgba(225, 255, 125, 0.3);
   }
 }
 
 
 .mobile-only {
   display: none;
+
   @media (max-width: 991px) {
     display: flex;
   }

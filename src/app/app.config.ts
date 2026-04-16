@@ -12,7 +12,17 @@ import {
   LucideAngularModule, LayoutDashboard, Calendar, Users, MessageSquare,
   MessageCircle, Settings, DollarSign, Bot, Pencil, Trash2, ChevronLeft, 
   ChevronRight, Plus, Circle, Search, Menu, Moon, Mail, Bell, ArrowLeft, 
-  Clock, TrendingUp, MoreVertical, ChevronDown, RefreshCw, Eye, EyeOff
+  Clock, TrendingUp, MoreVertical, ChevronDown, RefreshCw, Eye, EyeOff,
+  Package,
+  Save,
+  ImagePlus,
+  X,
+  Gift,
+  Image,
+  Tag,
+  FileText,
+  ChevronUp,
+  PackagePlus
 } from 'lucide-angular';
 
 // Registra os dados de localidade para o Brasil
@@ -43,7 +53,8 @@ export const appConfig: ApplicationConfig = {
         LayoutDashboard, Calendar, Users, MessageSquare, DollarSign, Bot,
         Pencil, Trash2, ChevronLeft, ChevronRight, Plus, MessageCircle,
         Settings, Circle, Menu, Search, Moon, Mail, Bell, ArrowLeft,
-        TrendingUp, Clock, MoreVertical, ChevronDown, RefreshCw, Eye, EyeOff
+        TrendingUp, Clock, MoreVertical, ChevronDown, RefreshCw, Eye, EyeOff,
+        Package,Save, ImagePlus, X , Gift, Image ,Tag , FileText ,ChevronUp ,PackagePlus
       })
     )
   ]

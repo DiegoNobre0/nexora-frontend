@@ -37,3 +37,136 @@ lucide-icon, i[data-lucide] {
     filter: drop-shadow(0 0 5px rgba(108, 78, 255, 0.4));
   }
 }
+
+
+
+
+// =====================================================================
+// TOGGLE SWITCH (Universal Nexora)
+// =====================================================================
+.toggle-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.5); // Fundo slate-900 translúcido
+  border: 1px solid #334155; // Borda slate-700
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+  margin-bottom: 1.5rem;
+
+  &:hover { background: rgba(30, 41, 59, 0.5); }
+
+  &__info { display: flex; flex-direction: column; }
+  &__label { font-size: 0.875rem; font-weight: 500; color: #F1F5F9; }
+  &__desc  { font-size: 0.75rem; color: #94A3B8; margin-top: 0.25rem; }
+}
+
+.toggle-switch {
+  width: 2.5rem;
+  height: 1.25rem;
+  background: #334155; // Cor desligado (slate-700)
+  border-radius: 9999px;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    background: white;
+    border-radius: 50%;
+    top: 0.125rem;
+    left: 0.125rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+
+  &--active {
+    background: #6C4EFF; // A sua cor roxa principal
+    &::before { transform: translateX(1.25rem); left: 0.125rem; } // Desliza a bolinha
+  }
+}
+
+// =====================================================================
+// ANGULAR MATERIAL - CUSTOMIZAÇÃO GLOBAL (NEXORA THEME)
+// =====================================================================
+
+/* 1. O container do select (a caixa onde você clica na tela) */
+.nx-mat-select {
+  background: #020617; // Fundo slate-950
+  border: 1px solid #334155; // Borda slate-700
+  padding: 0.25rem 1rem; // Ajuste de padding para alinhar altura
+  border-radius: 0.75rem;
+  color: #F1F5F9;
+  font-size: 0.875rem;
+  min-height: 46px; // Altura mínima para bater com o input de busca
+  display: flex !important;
+  align-items: center;
+  box-sizing: border-box;
+
+  .mat-mdc-select-value { color: #F1F5F9; } // Texto selecionado
+  .mat-mdc-select-arrow { color: #64748B; } // Setinha nativa
+
+  &:focus-within {
+    border-color: #6C4EFF; // Roxo primary
+    box-shadow: 0 0 0 2px rgba(108, 78, 255, 0.2);
+  }
+}
+
+/* Força a fusão do Select com o Input de Busca (Toolbar) */
+.toolbar__select--fused {
+  border-radius: 0 0.75rem 0.75rem 0 !important; // Cantos retos na esquerda
+  border-left: 1px solid #334155;
+}
+
+/* 2. O Painel Flutuante (O menu que cai quando clica) */
+.mat-mdc-select-panel {
+  background-color: #0F172A !important; // 🔥 RESOLVE O TEXTO SOBREPOSTO! (Fundo slate-900)
+  border: 1px solid #334155 !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6) !important;
+  
+  /* 🔥 RESOLVE A BARRA DE ROLAGEM BRANCA! (Webkit Scrollbar) */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #0F172A; // Fundo da barra
+    border-radius: 0 0.5rem 0.5rem 0;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #334155; // Cor do "polegar" (thumb)
+    border-radius: 4px;
+    
+    &:hover {
+      background: #475569;
+    }
+  }
+
+  /* Estilo de cada opção da lista */
+  .mat-mdc-option {
+    color: #CBD5E1 !important; // Texto claro
+    font-size: 0.875rem;
+    
+    &:hover:not(.mdc-list-item--disabled) {
+      background-color: #1E293B !important; // Hover escuro
+    }
+
+    /* Estilo da opção quando está selecionada */
+    &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+      background-color: rgba(108, 78, 255, 0.1) !important; // Fundo roxo clarinho
+      color: #6C4EFF !important; // Texto roxo
+      font-weight: 600;
+    }
+  }
+}
+
+/* Remove a linha sublinhada feia nativa do Angular Material */
+.mat-mdc-form-field-subscript-wrapper { display: none !important; }
+.mat-mdc-form-field-bottom-align { display: none !important; }
+.mdc-line-ripple { display: none !important; }

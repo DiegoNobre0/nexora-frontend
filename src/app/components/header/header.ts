@@ -1,6 +1,7 @@
-import { Component, signal, output } from '@angular/core';
+import { Component, signal, output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -10,24 +11,27 @@ import { LucideAngularModule } from 'lucide-angular';
   styleUrl: './header.scss'
 })
 export class HeaderComponent {
-
- 
-
-
-  // Evento para abrir a sidebar no celular
   toggleMenu = output<void>();
+  authService = inject(AuthService);
 
-  // Controle dos dropdowns
   isNotifOpen = signal(false);
   isMessagesOpen = signal(false);
+  
+  // Controle de Frente de Caixa (Pode vir de um OrderService no futuro)
+  isPosOpen = signal(true); 
 
   toggleNotif() {
     this.isNotifOpen.set(!this.isNotifOpen());
-    this.isMessagesOpen.set(false); // Fecha o outro
+    this.isMessagesOpen.set(false);
   }
 
   toggleMessages() {
     this.isMessagesOpen.set(!this.isMessagesOpen());
-    this.isNotifOpen.set(false); // Fecha o outro
+    this.isNotifOpen.set(false);
+  }
+
+  getInitials(): string {
+    const name = this.authService.currentUser()?.name || 'U';
+    return name.charAt(0).toUpperCase();
   }
 }

@@ -32,13 +32,14 @@
   .giant-bg-logo {
     position: absolute;
     top: 20%;
-    
+
     transform: translateY(-50%);
     width: 50%; // Tamanho monstruoso
     opacity: 0.9; // Forte o suficiente para destacar
     pointer-events: none; // O mouse passa direto por ela
     z-index: 1;
-    filter: drop-shadow(0 0 60px rgba(108, 78, 255, 0.4)); // Glow roxo gigante
+    // filter: drop-shadow(0 0 60px rgba(108, 78, 255, 0.4)); 
+    filter: drop-shadow(0 0 60px rgba(225, 255, 125, 0.25));
   }
 
   .brand-content {
@@ -87,7 +88,8 @@
     left: -100px;
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(108, 78, 255, 0.15) 0%, transparent 70%);
+    // background: radial-gradient(circle, rgba(108, 78, 255, 0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(74, 208, 175, 0.15) 0%, transparent 70%);
     filter: blur(60px);
     z-index: 0;
   }
@@ -285,5 +287,54 @@
     &:hover {
       text-decoration: underline;
     }
+  }
+}
+
+// ==========================================
+// 5. ESTADOS DE ERRO E LOADING
+// ==========================================
+
+// Caixa de alerta de senha incorreta
+.error-message-box {
+  background: rgba(239, 68, 68, 0.1); // Vermelho com opacidade
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5; // Texto vermelho claro (combina com fundo escuro)
+  padding: 12px;
+  border-radius: var.$radius-md;
+  font-size: 0.85rem;
+  text-align: center;
+  font-weight: 500;
+  animation: slideDown 0.3s ease-out;
+}
+
+// Animação para o ícone de loading no botão
+.loading-icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  vertical-align: middle;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

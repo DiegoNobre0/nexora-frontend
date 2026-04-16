@@ -5,7 +5,7 @@
 
     <div class="brand-content">
       <h1 class="welcome-title">Seja bem-vindo ao <span class="highlight">NEXORA</span></h1>
-      <p class="welcome-text">NEXORA unifica agendamento, financeiro e IA para salões e clínicas modernas e eficientes.
+      <p class="welcome-text">NEXORA unifica agendamento, financeiro e IA para comércio e clínicas modernas e eficientes.
       </p>
       <button class="btn-learn-more">Saiba Mais</button>
     </div>
@@ -17,12 +17,16 @@
 
       <header class="card-header">
         <img src="logo.png" class="logo" alt="Logo Nexora">
-
-        <!-- <h2>Login</h2>
-        <p>Seu Painel de Administração</p> -->
       </header>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        
+        @if (errorMessage()) {
+          <div class="error-message-box">
+            {{ errorMessage() }}
+          </div>
+        }
+
         <div class="form-group">
           <label>E-mail</label>
           <input type="email" formControlName="email" placeholder="diego@nexora.com" class="nexora-input">
@@ -42,7 +46,14 @@
           </label>
         </div>
 
-        <button type="submit" class="btn-login" [disabled]="loginForm.invalid">Entrar</button>
+        <button type="submit" class="btn-login" [disabled]="loginForm.invalid || isLoading()">
+          @if (isLoading()) {
+            <lucide-icon name="refresh-cw" class="loading-icon"></lucide-icon>
+            Entrando...
+          } @else {
+            Entrar
+          }
+        </button>
       </form>
 
       <footer class="card-footer">
