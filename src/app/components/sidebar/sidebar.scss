@@ -98,7 +98,7 @@ $sidebar-collapsed: 85px;
   // MARCA (LOGO)
   // ----------------------------------------------------
   .brand {
-    
+
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -129,8 +129,15 @@ $sidebar-collapsed: 85px;
 
   // Suaviza a troca das logos
   @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 
   .menu-section {
@@ -154,6 +161,7 @@ $sidebar-collapsed: 85px;
     padding: 0 1rem;
 
     .menu-item {
+      cursor: pointer;
       display: flex;
       align-items: center;
       padding: 0.85rem 1rem;
@@ -189,7 +197,7 @@ $sidebar-collapsed: 85px;
       &.active {
         background: var.$primary;
         color: white;
-        box-shadow: 0 4px 15px rgba(108, 78, 255, 0.25);        
+        box-shadow: 0 4px 15px rgba(108, 78, 255, 0.25);
 
         .sidebar-icon {
           color: white;
@@ -271,6 +279,7 @@ $sidebar-collapsed: 85px;
   }
 }
 
+
 .submenu {
   display: flex;
   flex-direction: column;
@@ -307,6 +316,7 @@ $sidebar-collapsed: 85px;
     &:hover {
       color: var.$text-primary;
       background: rgba(255, 255, 255, 0.05);
+
       &::before {
         background: var.$primary;
       }
@@ -315,6 +325,7 @@ $sidebar-collapsed: 85px;
     &.active {
       color: var.$primary;
       font-weight: 700;
+
       &::before {
         background: var.$primary;
         box-shadow: 0 0 8px var.$primary;
@@ -324,6 +335,13 @@ $sidebar-collapsed: 85px;
 }
 
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

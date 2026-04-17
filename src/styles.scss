@@ -21,10 +21,11 @@ body {
 }
 
 // Configuração dos ícones Lucide
-lucide-icon, i[data-lucide] {
+lucide-icon,
+i[data-lucide] {
   width: 24px;
   height: 24px;
-  stroke-width: 2px;
+  // stroke-width: 2px;
   display: inline-block;
   vertical-align: middle;
   color: var.$text-secondary;
@@ -32,7 +33,9 @@ lucide-icon, i[data-lucide] {
 }
 
 .active {
-  lucide-icon, i[data-lucide] {
+
+  lucide-icon,
+  i[data-lucide] {
     color: var.$primary;
     filter: drop-shadow(0 0 5px rgba(108, 78, 255, 0.4));
   }
@@ -57,11 +60,26 @@ lucide-icon, i[data-lucide] {
   user-select: none;
   margin-bottom: 1.5rem;
 
-  &:hover { background: rgba(30, 41, 59, 0.5); }
+  &:hover {
+    background: rgba(30, 41, 59, 0.5);
+  }
 
-  &__info { display: flex; flex-direction: column; }
-  &__label { font-size: 0.875rem; font-weight: 500; color: #F1F5F9; }
-  &__desc  { font-size: 0.75rem; color: #94A3B8; margin-top: 0.25rem; }
+  &__info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #F1F5F9;
+  }
+
+  &__desc {
+    font-size: 0.75rem;
+    color: #94A3B8;
+    margin-top: 0.25rem;
+  }
 }
 
 .toggle-switch {
@@ -83,12 +101,18 @@ lucide-icon, i[data-lucide] {
     top: 0.125rem;
     left: 0.125rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 
   &--active {
     background: #6C4EFF; // A sua cor roxa principal
-    &::before { transform: translateX(1.25rem); left: 0.125rem; } // Desliza a bolinha
+
+    &::before {
+      transform: translateX(1.25rem);
+      left: 0.125rem;
+    }
+
+    // Desliza a bolinha
   }
 }
 
@@ -109,8 +133,16 @@ lucide-icon, i[data-lucide] {
   align-items: center;
   box-sizing: border-box;
 
-  .mat-mdc-select-value { color: #F1F5F9; } // Texto selecionado
-  .mat-mdc-select-arrow { color: #64748B; } // Setinha nativa
+  .mat-mdc-select-value {
+    color: #F1F5F9;
+  }
+
+  // Texto selecionado
+  .mat-mdc-select-arrow {
+    color: #64748B;
+  }
+
+  // Setinha nativa
 
   &:focus-within {
     border-color: #6C4EFF; // Roxo primary
@@ -130,19 +162,21 @@ lucide-icon, i[data-lucide] {
   border: 1px solid #334155 !important;
   border-radius: 0.5rem !important;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6) !important;
-  
+
   /* 🔥 RESOLVE A BARRA DE ROLAGEM BRANCA! (Webkit Scrollbar) */
   &::-webkit-scrollbar {
     width: 8px;
   }
+
   &::-webkit-scrollbar-track {
     background: #0F172A; // Fundo da barra
     border-radius: 0 0.5rem 0.5rem 0;
   }
+
   &::-webkit-scrollbar-thumb {
     background: #334155; // Cor do "polegar" (thumb)
     border-radius: 4px;
-    
+
     &:hover {
       background: #475569;
     }
@@ -152,7 +186,7 @@ lucide-icon, i[data-lucide] {
   .mat-mdc-option {
     color: #CBD5E1 !important; // Texto claro
     font-size: 0.875rem;
-    
+
     &:hover:not(.mdc-list-item--disabled) {
       background-color: #1E293B !important; // Hover escuro
     }
@@ -167,6 +201,82 @@ lucide-icon, i[data-lucide] {
 }
 
 /* Remove a linha sublinhada feia nativa do Angular Material */
-.mat-mdc-form-field-subscript-wrapper { display: none !important; }
-.mat-mdc-form-field-bottom-align { display: none !important; }
-.mdc-line-ripple { display: none !important; }
+.mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+.mat-mdc-form-field-bottom-align {
+  display: none !important;
+}
+
+.mdc-line-ripple {
+  display: none !important;
+}
+
+
+// =====================================================================
+// BOTÕES UNIVERSAIS NEXORA (Coloque no styles.scss)
+// =====================================================================
+
+// Botão Principal (Roxo)
+.btn-primary {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #6C4EFF !important; // Roxo Nexora
+  color: #ffffff !important;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.75rem;
+  border: none !important;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px -5px rgba(108, 78, 255, 0.4) !important;
+
+  &:hover:not(:disabled) {
+    background-color: #583be8 !important; // Roxo mais escuro
+    transform: translateY(-2px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #334155 !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+}
+
+// Botão de Cancelar (Transparente com borda)
+.btn-cancel {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: transparent !important; // CRÍTICO: Tira o fundo branco
+  color: #CBD5E1 !important;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid #334155 !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: #1E293B !important;
+    color: #ffffff !important;
+  }
+}
+
+// Variação Perigo (Vermelho para o Modal de Excluir)
+.btn-primary--danger {
+  background-color: #EF4444 !important; // Vermelho Vivo
+  box-shadow: 0 0 20px -5px rgba(239, 68, 68, 0.4) !important;
+
+  &:hover:not(:disabled) {
+    background-color: #DC2626 !important; // Vermelho Escuro
+  }
+}

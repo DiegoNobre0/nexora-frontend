@@ -3,16 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 import { CatalogService } from '../../../services/catalog.service';
+import { Category } from '../../../interfaces/catalog.interface';
 
-export interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  is_active: boolean;
-  _count?: {
-    products: number;
-  };
-}
 
 @Component({
   selector: 'app-categories',
@@ -21,17 +13,24 @@ export interface Category {
   templateUrl: './categories.html',
   styleUrl: './categories.scss'
 })
-export class CategoriesComponent implements OnInit { // Adicionado 'Component' ao nome por padronização
+export class CategoriesComponent implements OnInit {
   private catalogService = inject(CatalogService);
   private fb = inject(FormBuilder);
 
-  // Estados reativos (Signals)
+  // ─── ESTADOS GERAIS ─────────────────────────────────────────
   categories = signal<Category[]>([]);
   isLoading = signal(true);
+
+  // ─── MODAL DE FORMULÁRIO (CRIAR/EDITAR) ─────────────────────
   isModalOpen = signal(false);
   isEditing = signal(false);
   currentId = signal<string | null>(null);
-  isSaving = signal(false); // 🔥 CORREÇÃO: Transformado em Signal booleano
+  isSaving = signal(false);
+
+  // ─── MODAL DE CONFIRMAÇÃO (EXCLUSÃO) ────────────────────────
+  isConfirmModalOpen = signal(false);
+  itemToDelete = signal<Category | null>(null);
+  isDeleting = signal(false);
 
   // Formulário Reativo
   categoryForm = this.fb.nonNullable.group({
@@ -58,23 +57,21 @@ export class CategoriesComponent implements OnInit { // Adicionado 'Component' a
     });
   }
 
-  // 🔥 CORREÇÃO: Função finalizada com "Optimistic UI Update"
   toggleCategory(id: string) {
     const category = this.categories().find(cat => cat.id === id);
     if (!category) return;
 
     const newStatus = !category.is_active;
 
-    // Chama o backend
     this.catalogService.updateCategory(id, { is_active: newStatus }).subscribe({
       next: () => {
-        // Atualiza apenas o item no Signal local (Evita recarregar a tela inteira atoa)
         this.categories.update(cats => 
           cats.map(c => c.id === id ? { ...c, is_active: newStatus } : c)
         );
       },
       error: (err) => {
         console.error('Erro ao alternar status', err);
+        // Opcional: futuramente trocar esse alert por um Toast/Snackbar bonito
         alert('Não foi possível atualizar o status da categoria.');
       }
     });
@@ -98,17 +95,15 @@ export class CategoriesComponent implements OnInit { // Adicionado 'Component' a
 
   closeModal() {
     this.isModalOpen.set(false);
-    this.categoryForm.reset(); // Limpa o formulário ao fechar
+    this.categoryForm.reset();
   }
 
-  // 🔥 CORREÇÃO: Controle de Loading no botão (DRY Principle)
   onSubmit() {
     if (this.categoryForm.invalid || this.isSaving()) return;
 
-    this.isSaving.set(true); // Trava o botão e gira o ícone
+    this.isSaving.set(true);
     const data = this.categoryForm.getRawValue();
 
-    // Decide se é Criação ou Atualização para não repetir o código de 'subscribe'
     const request$ = this.isEditing()
       ? this.catalogService.updateCategory(this.currentId()!, data)
       : this.catalogService.createCategory(data);
@@ -117,25 +112,47 @@ export class CategoriesComponent implements OnInit { // Adicionado 'Component' a
       next: () => {
         this.loadCategories();
         this.closeModal();
-        this.isSaving.set(false); // Destrava
+        this.isSaving.set(false);
       },
       error: (err) => {
         console.error('Erro ao salvar categoria:', err);
         alert('Erro ao salvar os dados.');
-        this.isSaving.set(false); // Destrava em caso de erro
+        this.isSaving.set(false);
       }
     });
   }
 
-  deleteCategory(id: string) {
-    if (confirm('Deseja realmente excluir esta categoria? Os produtos vinculados ficarão sem categoria.')) {
-      this.catalogService.deleteCategory(id).subscribe({
-        next: () => this.loadCategories(),
-        error: (err) => {
-          console.error('Erro ao deletar:', err);
-          alert('Não é possível deletar esta categoria pois existem produtos vinculados a ela.');
-        }
-      });
-    }
+  // ─── LÓGICA DE EXCLUSÃO (NOVO PADRÃO) ───────────────────────
+  
+  openDeleteConfirm(category: Category) {
+    this.itemToDelete.set(category);
+    this.isConfirmModalOpen.set(true);
+  }
+
+  closeDeleteConfirm() {
+    this.isConfirmModalOpen.set(false);
+    this.itemToDelete.set(null);
+  }
+
+  confirmDelete() {
+    const category = this.itemToDelete();
+    if (!category) return;
+
+    this.isDeleting.set(true); // Gira o loading do botão de exclusão
+
+    this.catalogService.deleteCategory(category.id).subscribe({
+      next: () => {
+        // Atualiza a interface otimista removendo o item
+        this.categories.update(cats => cats.filter(c => c.id !== category.id));
+        this.closeDeleteConfirm();
+        this.isDeleting.set(false);
+      },
+      error: (err) => {
+        console.error('Erro ao deletar:', err);
+        alert(`Não é possível deletar a categoria "${category.name}" pois existem produtos vinculados a ela.`);
+        this.isDeleting.set(false);
+        this.closeDeleteConfirm();
+      }
+    });
   }
 }

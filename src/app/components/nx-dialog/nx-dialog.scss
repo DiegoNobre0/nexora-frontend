@@ -1,0 +1,97 @@
+// ─── OVERLAY E ANIMAÇÕES ──────────────────────────────────────
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(2, 6, 23, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+// ─── CARD DO MODAL ────────────────────────────────────────────
+.modal-card {
+  background: #0F172A; // slate-900
+  width: 100%;
+  max-width: 400px;
+  border-radius: 1rem;
+  border: 1px solid #334155; // slate-700
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+// ─── CONTEÚDO (Ícone, Título e Texto) ─────────────────────────
+.confirm-modal-content {
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.confirm-modal-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+
+  // Cores dinâmicas
+  &--danger, &--error { background: rgba(239, 68, 68, 0.1); color: #EF4444; }
+  &--success { background: rgba(16, 185, 129, 0.1); color: #34D399; }
+  &--warning { background: rgba(245, 158, 11, 0.1); color: #FBBF24; }
+  &--confirm { background: rgba(108, 78, 255, 0.1); color: #6C4EFF; }
+
+  // Truque para estilizar o SVG do Lucide dentro do componente
+  ::ng-deep svg {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+}
+
+.confirm-modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #F8FAFC;
+  margin: 0 0 0.5rem 0;
+}
+
+.confirm-modal-desc {
+  font-size: 0.875rem;
+  color: #94A3B8;
+  line-height: 1.5;
+  margin: 0;
+  
+  // Truque para o strong que vem via [innerHTML]
+  ::ng-deep strong {
+    color: #E2E8F0;
+    font-weight: 700;
+  }
+}
+
+// ─── RODAPÉ E BOTÕES ──────────────────────────────────────────
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba(15, 23, 42, 0.4);
+  border-top: 1px solid #1E293B;
+
+  // Garante que os botões ocupem o mesmo espaço
+  button {
+    flex: 1;
+    justify-content: center;
+    padding: 0.75rem;
+  }
+}

@@ -8,8 +8,10 @@
   gap: 2rem;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: #F8FAFC;
-  
-  @media (max-width: 640px) { padding: 1rem; }
+
+  @media (max-width: 640px) {
+    padding: 1rem;
+  }
 }
 
 // ─── Header ───────────────────────────────────────────────────
@@ -62,7 +64,10 @@
     transform: translateY(-2px);
   }
 
-  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 .btn-cancel {
@@ -77,7 +82,10 @@
   transition: all 0.2s;
   cursor: pointer;
 
-  &:hover { background: #1E293B; color: #ffffff; }
+  &:hover {
+    background: #1E293B;
+    color: #ffffff;
+  }
 }
 
 // ─── Alerta de Estoque ────────────────────────────────────────
@@ -90,8 +98,18 @@
   background: rgba(245, 158, 11, 0.1); // amber-500/10
   border: 1px solid rgba(245, 158, 11, 0.2);
 
-  &__icon { width: 1.25rem; height: 1.25rem; color: #F59E0B; flex-shrink: 0; }
-  &__text { font-size: 0.875rem; color: #FDE68A; }
+  &__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #F59E0B;
+    flex-shrink: 0;
+  }
+
+  &__text {
+    font-size: 0.875rem;
+    color: #FDE68A;
+  }
+
   &__cta {
     background: none;
     border: none;
@@ -100,7 +118,10 @@
     text-decoration: underline;
     margin-left: 0.5rem;
     cursor: pointer;
-    &:hover { color: #FCD34D; }
+
+    &:hover {
+      color: #FCD34D;
+    }
   }
 }
 
@@ -115,7 +136,7 @@
   border-radius: 1rem;
   align-items: center;
   flex-wrap: wrap; // CRÍTICO: Permite que os itens caiam para a linha de baixo
-  
+
 
   // Cada caixa dentro da toolbar
   &__item {
@@ -146,8 +167,8 @@
   // Estilização do Input de Busca
   &__search-icon {
     position: absolute;
-    left: 1rem;
-    top: 50%;
+    left: 0.8rem;
+    top: 42%;
     transform: translateY(-50%);
     width: 1.125rem;
     height: 1.125rem;
@@ -168,6 +189,7 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
 input[type="number"] {
   -moz-appearance: textfield;
 }
@@ -200,8 +222,11 @@ input[type="number"] {
     font-size: 1.25rem;
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
-    
-    &:hover { background: #1E293B; color: #ffffff; }
+
+    &:hover {
+      background: #1E293B;
+      color: #ffffff;
+    }
   }
 
   &__field {
@@ -215,7 +240,9 @@ input[type="number"] {
     text-align: center;
     padding: 0;
 
-    &:focus { outline: none; }
+    &:focus {
+      outline: none;
+    }
   }
 }
 
@@ -228,8 +255,10 @@ input[type="number"] {
   color: #F1F5F9;
   font-size: 0.875rem;
   transition: all 0.2s;
-  
-  &::placeholder { color: #64748B; }
+
+  &::placeholder {
+    color: #64748B;
+  }
 
   &:focus {
     outline: none;
@@ -237,8 +266,15 @@ input[type="number"] {
     box-shadow: 0 0 0 2px rgba(108, 78, 255, 0.2);
   }
 
-  &--center { text-align: center; }
-  &--lg { font-size: 1.25rem; font-weight: 700; padding: 0.75rem; }
+  &--center {
+    text-align: center;
+  }
+
+  &--lg {
+    font-size: 1.25rem;
+    font-weight: 700;
+    padding: 0.75rem;
+  }
 }
 
 // ─── Tabela ───────────────────────────────────────────────────
@@ -250,7 +286,9 @@ input[type="number"] {
   overflow: hidden;
 }
 
-.data-table-scroll { overflow-x: auto; }
+.data-table-scroll {
+  overflow-x: auto;
+}
 
 .data-table {
   width: 100%;
@@ -258,39 +296,78 @@ input[type="number"] {
   border-collapse: collapse;
   min-width: 700px;
 
-  &__head { background: rgba(2, 6, 23, 0.4); border-bottom: 1px solid rgba(30, 41, 59, 0.8); }
-    &__th {
+  &__head {
+    background: rgba(2, 6, 23, 0.4);
+    border-bottom: 1px solid rgba(30, 41, 59, 0.8);
+  }
+
+  &__th {
     padding: 1rem 1.5rem;
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
     color: #94A3B8;
     white-space: nowrap; // Evita quebra indesejada no cabeçalho
-    &--center { text-align: center; }
-    &--right  { text-align: right; }
+
+    &--center {
+      text-align: center;
+    }
+
+    &--right {
+      text-align: right;
+    }
   }
 
-  &__row { border-bottom: 1px solid rgba(30, 41, 59, 0.5); }
+  &__row {
+    border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+  }
+
   &__row--hoverable {
     transition: background-color 0.2s;
-    &:hover { background: rgba(30, 41, 59, 0.3); }
-    &:hover .row-actions { opacity: 1; }
+
+    &:hover {
+      background: rgba(30, 41, 59, 0.3);
+    }
+
+    &:hover .row-actions {
+      opacity: 1;
+    }
   }
 
   &__td {
     padding: 1rem 1.5rem;
     font-size: 0.875rem;
     vertical-align: middle;
-    &--center { text-align: center; }
-    &--right  { text-align: right; }
-    
+
+    &--center {
+      text-align: center;
+    }
+
+    &--right {
+      text-align: right;
+    }
+
     // Configura colunas de ações e status para não crescerem muito
-    &:last-child { white-space: nowrap; width: 1%; } 
+    &:last-child {
+      white-space: nowrap;
+      width: 1%;
+    }
   }
 
-  &__value { color: #E2E8F0; font-weight: 600; }
-  &__secondary { color: #94A3B8; font-size: 0.8rem; }
-  &__empty { padding: 4rem 1.25rem; text-align: center; }
+  &__value {
+    color: #E2E8F0;
+    font-weight: 600;
+  }
+
+  &__secondary {
+    color: #94A3B8;
+    font-size: 0.8rem;
+  }
+
+  &__empty {
+    padding: 4rem 1.25rem;
+    text-align: center;
+  }
 }
 
 // ─── Células Específicas ──────────────────────────────────────
@@ -311,14 +388,40 @@ input[type="number"] {
     flex-shrink: 0;
     overflow: hidden;
   }
-  &__img { width: 100%; height: 100%; object-fit: cover; }
-  &__placeholder-icon { width: 1.25rem; height: 1.25rem; color: #64748B; }
 
-  &__info { display: flex; flex-direction: column; gap: 0.125rem; }
-  &__name { color: #E2E8F0; font-weight: 500; font-size: 0.875rem; transition: color 0.2s; }
-  &__unit { font-size: 0.75rem; color: #64748B; }
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
-  .data-table__row--hoverable:hover &__name { color: #ffffff; }
+  &__placeholder-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #64748B;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  &__name {
+    color: #E2E8F0;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: color 0.2s;
+  }
+
+  &__unit {
+    font-size: 0.75rem;
+    color: #64748B;
+  }
+
+  .data-table__row--hoverable:hover &__name {
+    color: #ffffff;
+  }
 }
 
 .stock-cell {
@@ -330,7 +433,12 @@ input[type="number"] {
   &__qty {
     font-weight: 600;
     color: #E2E8F0;
-    &--low { color: #F59E0B; } // amber-500
+
+    &--low {
+      color: #F59E0B;
+    }
+
+    // amber-500
   }
 }
 
@@ -345,19 +453,41 @@ input[type="number"] {
   font-weight: 600;
   border: 1px solid transparent;
 
-  &::before { content: ''; width: 0.375rem; height: 0.375rem; border-radius: 50%; }
+  &::before {
+    content: '';
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 50%;
+  }
 
   &--active {
-    background: rgba(16, 185, 129, 0.1); color: #34D399; border-color: rgba(16, 185, 129, 0.2);
-    &::before { background-color: #34D399; }
+    background: rgba(16, 185, 129, 0.1);
+    color: #34D399;
+    border-color: rgba(16, 185, 129, 0.2);
+
+    &::before {
+      background-color: #34D399;
+    }
   }
+
   &--inactive {
-    background: rgba(30, 41, 59, 0.5); color: #94A3B8; border-color: #334155;
-    &::before { background-color: #64748B; }
+    background: rgba(30, 41, 59, 0.5);
+    color: #94A3B8;
+    border-color: #334155;
+
+    &::before {
+      background-color: #64748B;
+    }
   }
+
   &--warning {
-    background: rgba(245, 158, 11, 0.1); color: #FBBF24; border-color: rgba(245, 158, 11, 0.2);
-    &::before { background-color: #FBBF24; }
+    background: rgba(245, 158, 11, 0.1);
+    color: #FBBF24;
+    border-color: rgba(245, 158, 11, 0.2);
+
+    &::before {
+      background-color: #FBBF24;
+    }
   }
 }
 
@@ -367,7 +497,7 @@ input[type="number"] {
   align-items: center;
   justify-content: flex-end;
   gap: 0.5rem;
-  opacity: 0;
+  // opacity: 0;
   transition: opacity 0.2s;
 }
 
@@ -383,10 +513,20 @@ input[type="number"] {
   justify-content: center;
   transition: all 0.2s;
 
-  &__icon { width: 1.125rem; height: 1.125rem; }
+  &__icon {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
 
-  &:hover { color: #ffffff; background: #334155; }
-  &--primary:hover { color: #818CF8; background: rgba(99, 102, 241, 0.1); }
+  &:hover {
+    color: #ffffff;
+    background: #334155;
+  }
+
+  &--primary:hover {
+    color: #818CF8;
+    background: rgba(99, 102, 241, 0.1);
+  }
 }
 
 // ─── Paginação ────────────────────────────────────────────────
@@ -398,8 +538,20 @@ input[type="number"] {
   border-top: 1px solid #1E293B;
   background: #0F172A;
 
-  &__info { font-size: 0.875rem; color: #94A3B8; strong { color: #E2E8F0; } }
-  &__controls { display: flex; gap: 0.5rem; }
+  &__info {
+    font-size: 0.875rem;
+    color: #94A3B8;
+
+    strong {
+      color: #E2E8F0;
+    }
+  }
+
+  &__controls {
+    display: flex;
+    gap: 0.5rem;
+  }
+
   &__btn {
     padding: 0.5rem 1rem;
     background: #1E293B;
@@ -411,8 +563,14 @@ input[type="number"] {
     cursor: pointer;
     transition: all 0.2s;
 
-    &:hover:not(:disabled) { background: #334155; }
-    &:disabled { opacity: 0.5; cursor: not-allowed; }
+    &:hover:not(:disabled) {
+      background: #334155;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
   }
 }
 
@@ -448,7 +606,12 @@ input[type="number"] {
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid #1E293B;
 
-  &__title { font-size: 1.125rem; font-weight: 700; color: #ffffff; }
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
   &__close {
     padding: 0.5rem;
     margin-right: -0.5rem;
@@ -457,11 +620,17 @@ input[type="number"] {
     background: transparent;
     border: none;
     cursor: pointer;
-    &:hover { background: #1E293B; color: #ffffff; }
+
+    &:hover {
+      background: #1E293B;
+      color: #ffffff;
+    }
   }
 }
 
-.modal-form { padding: 1.5rem; }
+.modal-form {
+  padding: 1.5rem;
+}
 
 // Resumo do Produto no Modal
 .product-summary-card {
@@ -471,15 +640,48 @@ input[type="number"] {
   border-radius: 0.75rem;
   margin-bottom: 1.5rem;
 
-  &__label { font-size: 0.75rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; }
-  &__name  { font-size: 1rem; font-weight: 600; color: #F1F5F9; margin-top: 0.25rem; }
-  &__stock { font-size: 0.875rem; color: #94A3B8; margin-top: 0.5rem; strong { color: #E2E8F0; } }
+  &__label {
+    font-size: 0.75rem;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #F1F5F9;
+    margin-top: 0.25rem;
+  }
+
+  &__stock {
+    font-size: 0.875rem;
+    color: #94A3B8;
+    margin-top: 0.5rem;
+
+    strong {
+      color: #E2E8F0;
+    }
+  }
 }
 
-.stock-form { display: flex; flex-direction: column; gap: 1.5rem; }
+.stock-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
 
-.form-field { display: flex; flex-direction: column; gap: 0.5rem; }
-.form-label { font-size: 0.875rem; font-weight: 500; color: #CBD5E1; }
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #CBD5E1;
+}
 
 // Seletor de Operação (IN, OUT, ADJUST)
 .op-selector {
@@ -498,8 +700,11 @@ input[type="number"] {
     cursor: pointer;
     transition: all 0.2s;
 
-    &:hover { border-color: #475569; color: #E2E8F0; }
-    
+    &:hover {
+      border-color: #475569;
+      color: #E2E8F0;
+    }
+
     &--active {
       border-color: var.$primary;
       background: rgba(108, 78, 255, 0.1);
@@ -514,14 +719,45 @@ input[type="number"] {
   padding-top: 0.5rem;
   border-top: 1px solid #1E293B;
   margin-top: 0.5rem;
-  
-  .btn-primary { flex: 1; justify-content: center; }
+
+  .btn-primary {
+    flex: 1;
+    justify-content: center;
+  }
 }
 
 // ─── Skeletons & Animações ────────────────────────────────────
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes scaleIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
+  }
+}
 
 .skeleton {
   background: linear-gradient(90deg, #1E293B 25%, #273449 50%, #1E293B 75%);
@@ -530,16 +766,49 @@ input[type="number"] {
   border-radius: 0.5rem;
   height: 1rem;
 
-  &--product-img { width: 2.75rem; height: 2.75rem; border-radius: 0.5rem; }
-  &--text-md { width: 8rem; }
-  &--text-xs { height: 0.75rem; }
-  &--text-sm { width: 2rem; margin: 0 auto; height: 1rem; }
-  &--badge  { width: 4rem; height: 1.5rem; border-radius: 9999px; margin: 0 auto; }
-  &--right  { width: 4rem; margin-left: auto; height: 1.25rem; }
-  &--centered { margin: 0 auto; }
+  &--product-img {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.5rem;
+  }
+
+  &--text-md {
+    width: 8rem;
+  }
+
+  &--text-xs {
+    height: 0.75rem;
+  }
+
+  &--text-sm {
+    width: 2rem;
+    margin: 0 auto;
+    height: 1rem;
+  }
+
+  &--badge {
+    width: 4rem;
+    height: 1.5rem;
+    border-radius: 9999px;
+    margin: 0 auto;
+  }
+
+  &--right {
+    width: 4rem;
+    margin-left: auto;
+    height: 1.25rem;
+  }
+
+  &--centered {
+    margin: 0 auto;
+  }
 }
 
-.skeleton-row { display: flex; align-items: center; gap: 1rem; }
+.skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
 
 // Estado Vazio
 .empty-state {
@@ -550,17 +819,42 @@ input[type="number"] {
   padding: 2rem 0;
 
   &__icon-wrap {
-    width: 4rem; height: 4rem; border-radius: 1rem;
-    background: rgba(30, 41, 59, 0.5); border: 1px solid #334155;
-    display: flex; align-items: center; justify-content: center;
-    color: #64748B; margin-bottom: 1rem;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1rem;
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748B;
+    margin-bottom: 1rem;
   }
-  &__icon { width: 1.5rem; height: 1.5rem; }
-  &__text { font-size: 1.125rem; color: #CBD5E1; font-weight: 600; }
+
+  &__icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  &__text {
+    font-size: 1.125rem;
+    color: #CBD5E1;
+    font-weight: 600;
+  }
+
   &__cta {
-    margin-top: 1.5rem; font-size: 0.875rem; font-weight: 500;
-    color: var.$primary; background: none; border: none; cursor: pointer;
-    &:hover { color: var.$primary-dark; text-decoration: underline; }
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var.$primary;
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      color: var.$primary-dark;
+      text-decoration: underline;
+    }
   }
 }
 
@@ -574,6 +868,7 @@ input[type="number"] {
 }
 
 .modal-header {
+
   // Ajuste fino para o modal que tem título e subtítulo
   &__info {
     display: flex;
@@ -596,14 +891,25 @@ input[type="number"] {
   overflow-y: auto; // SCROLL INTERNO AQUI!
   padding: 1.5rem;
   flex: 1;
-  
+
   // Custom scrollbar para o modal
-  &::-webkit-scrollbar { width: 6px; }
-  &::-webkit-scrollbar-track { background: transparent; }
-  &::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+  }
 
   // Espaço entre as seções do formulário
-  & > * + * { margin-top: 2rem; }
+  &>*+* {
+    margin-top: 2rem;
+  }
 
   &__section {
     display: flex;
@@ -612,9 +918,16 @@ input[type="number"] {
     padding-bottom: 2rem;
     border-bottom: 1px solid rgba(30, 41, 59, 0.6); // Linha divisória suave
 
-    &:last-of-type { border-bottom: none; padding-bottom: 0; }
+    &:last-of-type {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
 
-    &--collapsible { gap: 0; } // Remove o gap para a animação do collapse ficar junta
+    &--collapsible {
+      gap: 0;
+    }
+
+    // Remove o gap para a animação do collapse ficar junta
   }
 
   &__section-label {
@@ -624,7 +937,9 @@ input[type="number"] {
     letter-spacing: 0.1em;
     color: #64748B; // slate-500
 
-    &--inline { margin: 0; }
+    &--inline {
+      margin: 0;
+    }
   }
 
   // Grid inteligente que quebra em telas menores
@@ -635,9 +950,20 @@ input[type="number"] {
     width: 100%;
   }
 
-  &__col { flex: 1; min-width: 140px; }
-  &__col--grow { flex: 2; min-width: 200px; }
-  &__col--sm { width: 100px; flex-grow: 0; }
+  &__col {
+    flex: 1;
+    min-width: 140px;
+  }
+
+  &__col--grow {
+    flex: 2;
+    min-width: 200px;
+  }
+
+  &__col--sm {
+    width: 100px;
+    flex-grow: 0;
+  }
 
   &__textarea {
     height: 6rem;
@@ -657,8 +983,13 @@ input[type="number"] {
     padding: 1rem;
     transition: all 0.2s;
 
-    &:hover { background: rgba(30, 41, 59, 0.6); }
-    &:hover .product-form__section-label { color: #CBD5E1; }
+    &:hover {
+      background: rgba(30, 41, 59, 0.6);
+    }
+
+    &:hover .product-form__section-label {
+      color: #CBD5E1;
+    }
   }
 
   &__collapse-left {
@@ -667,8 +998,18 @@ input[type="number"] {
     gap: 0.75rem;
   }
 
-  &__collapse-icon { width: 1.125rem; height: 1.125rem; color: #64748B; }
-  &__collapse-chevron { width: 1.25rem; height: 1.25rem; color: #64748B; transition: transform 0.2s; }
+  &__collapse-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    color: #64748B;
+  }
+
+  &__collapse-chevron {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #64748B;
+    transition: transform 0.2s;
+  }
 
   &__fiscal-fields {
     margin-top: 1.5rem;
@@ -688,11 +1029,28 @@ input[type="number"] {
   width: fit-content;
   margin-top: -0.5rem; // Puxa um pouco pra cima
 
-  &__icon { width: 1rem; height: 1rem; }
+  &__icon {
+    width: 1rem;
+    height: 1rem;
+  }
 
-  &--success { background: rgba(16, 185, 129, 0.1); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.2); }
-  &--warning { background: rgba(245, 158, 11, 0.1); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.2); }
-  &--danger  { background: rgba(239, 68, 68, 0.1);  color: #F87171; border: 1px solid rgba(239, 68, 68, 0.2); }
+  &--success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #34D399;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+  }
+
+  &--warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: #FBBF24;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+  }
+
+  &--danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: #F87171;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+  }
 }
 
 // ─── Input com Prefixo R$ ─────────────────────────────────────
@@ -711,7 +1069,10 @@ input[type="number"] {
     z-index: 1;
   }
 
-  &__input { padding-left: 2.75rem; width: 100%; }
+  &__input {
+    padding-left: 2.75rem;
+    width: 100%;
+  }
 }
 
 // ─── Labels Complementares ────────────────────────────────────
@@ -722,8 +1083,18 @@ input[type="number"] {
 }
 
 .form-label {
-  &--required { color: #F87171; margin-left: 0.25rem; font-weight: bold; }
-  &--optional { color: #64748B; font-weight: 400; font-size: 0.8rem; margin-left: 0.25rem; }
+  &--required {
+    color: #F87171;
+    margin-left: 0.25rem;
+    font-weight: bold;
+  }
+
+  &--optional {
+    color: #64748B;
+    font-weight: 400;
+    font-size: 0.8rem;
+    margin-left: 0.25rem;
+  }
 }
 
 // O Rodapé com os botões (Fica fixo enquanto o formulário rola)
@@ -733,4 +1104,275 @@ input[type="number"] {
   // ou com position sticky. O design atual com ele no final do scroll é super válido.
   margin-top: 0;
   padding-top: 1.5rem;
+}
+// ─── Upload de Imagem (Modal de Produto) ──────────────────────
+.upload-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 2rem;
+  border: 2px dashed #334155;
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: rgba(15, 23, 42, 0.4);
+
+  &:hover {
+    border-color: var.$primary;
+    background: rgba(108, 78, 255, 0.05);
+
+    .upload-zone__icon {
+      color: var.$primary;
+    }
+  }
+
+  &__icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    color: #64748B;
+    margin-bottom: 1rem;
+    transition: color 0.2s;
+  }
+
+  &__label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #E2E8F0;
+  }
+
+  &__hint {
+    font-size: 0.875rem;
+    color: #94A3B8;
+    margin-top: 0.5rem;
+  }
+
+  &__input {
+    display: none;
+  }
+}
+
+.image-thumb {
+  position: relative;
+  border-radius: 0.75rem;
+  border: 1px solid #334155;
+  overflow: hidden;
+  aspect-ratio: 1;
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.2s;
+  }
+
+  &:hover &__overlay {
+    opacity: 1;
+  }
+
+  &__remove {
+    padding: 0.75rem;
+    background: #EF4444;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s;
+
+    &:hover {
+      background: #DC2626;
+      transform: scale(1.1);
+    }
+  }
+}
+
+/* ==========================================================================
+   SEÇÃO DE CÓDIGOS DE BARRAS (FormArray)
+   ========================================================================== */
+
+.barcode-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  .product-form__section-label {
+    margin-bottom: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted, #94a3b8);
+  }
+}
+
+.btn-add-barcode {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 9999px; /* Formato Pill igual ao print */
+  background-color: var(--primary-color, #7c3aed); /* Roxo vibrante */
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+  }
+}
+
+.barcode-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ==========================================================================
+   SEÇÃO DE CÓDIGOS DE BARRAS (100% Integrado ao Dark Mode)
+   ========================================================================== */
+
+.barcode-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  /* 1. Fundo elevado: Usando um Slate translúcido em vez de branco */
+  background-color: rgba(30, 41, 59, 0.4); 
+  /* 2. Borda elegante para destacar o card do fundo da página */
+  border: 1px solid rgba(51, 65, 85, 0.6); 
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+
+  /* Área do Código */
+  &__code {
+    flex: 1;
+    margin-bottom: 0;
+  }
+
+  /* Área do Select de Unidade */
+  &__unit {
+    width: 120px;
+    margin-bottom: 0;
+  }
+
+  /* Labels dentro do card */
+  .form-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94A3B8; /* Slate 400 - Leitura suave */
+    margin-bottom: 0.5rem;
+  }
+
+  /* Input de texto do código de barras */
+  .barcode-input {
+    /* Fundo mais "fundo" que o card (cria o efeito de input real) */
+    background-color: #020617 !important; 
+    color: #F1F5F9 !important; /* Texto claro */
+    border: 1px solid #1E293B; /* Borda do input visível, mas escura */
+    border-radius: 0.5rem;
+    height: 48px;
+    padding: 0 1rem;
+    font-size: 0.875rem;
+    
+    &::placeholder {
+      color: #475569; /* Slate 600 */
+    }
+
+    &:focus {
+      border-color: var.$primary;
+      box-shadow: 0 0 0 2px rgba(108, 78, 255, 0.2);
+    }
+  }
+
+  /* ─── Ajuste para o Angular Material Select ─── */
+  ::ng-deep .barcode-select {
+    
+    .mat-mdc-text-field-wrapper {
+      background-color: #020617 !important; /* Mesma profundidade do input */
+      border: 1px solid #1E293B !important;
+      border-radius: 0.5rem !important;
+      height: 48px !important;
+      padding: 0 0.75rem !important;
+      display: flex;
+      align-items: center;
+    }
+
+    .mdc-line-ripple {
+      display: none !important;
+    }
+
+    .mat-mdc-select-value-text {
+      color: #F1F5F9 !important;
+      font-weight: 500;
+    }
+
+    .mat-mdc-select-arrow {
+      color: #64748B !important;
+    }
+  }
+
+  /* Botão de excluir (Lixeira) */
+  &__delete {
+    margin-top: 26px;
+    padding: 0.5rem;
+    color: #64748B;
+    background: rgba(15, 23, 42, 0.4); /* Botão com fundo escuro e discreto */
+    border: 1px solid transparent;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      color: #F87171; /* Fica vermelho sutil no hover */
+      background-color: rgba(239, 68, 68, 0.1); /* Fundo vermelho translúcido */
+      border-color: rgba(239, 68, 68, 0.2);
+    }
+  }
+}
+
+/* Estado vazio */
+.barcode-empty {
+  font-size: 0.875rem;
+  color: var(--text-muted, #64748b);
+  text-align: center;
+  padding: 2rem;
+  border: 2px dashed var(--border-color, #334155);
+  border-radius: 8px;
+  background: rgba(0,0,0,0.05);
+}
+
+// ─── Badges de Categoria na Tabela (Adicione junto dos outros badges) ───
+.category-badges {
+  display: flex;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+}
+
+.category-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.625rem;
+  border: 1px solid #E2E8F0; // Borda cinza bem clara
+  border-radius: 0.375rem; // Cantos arredondados parecidos com o da imagem
+  background: #ffffff; // Fundo branco igual ao print
+  color: #334155; // Texto escuro para contraste
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }

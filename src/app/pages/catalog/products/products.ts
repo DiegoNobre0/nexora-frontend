@@ -1,43 +1,14 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core'; // 👈 computed importado
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 import { CatalogService } from '../../../services/catalog.service';
-import { Category } from '../categories/categories';
+
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
-
-export interface ProductBarcode {
-  id: string;
-  code: string;
-  unit: string;
-}
-
-export interface Product {
-  id: string;
-  name: string;
-  description?: string;
-  image_url?: string;
-
-  // Financeiro
-  price: number;
-  price_wholesale?: number;
-  cost_price?: number;
-
-  // Estoque
-  stock_qty: number;
-  stock_min: number;
-  unit?: string;
-
-  ncm?: string;
-  cfop?: string;
-
-  // Relacionamentos e Status
-  category_id: string;
-  is_active: boolean;
-  category?: Category;
-  barcodes?: ProductBarcode[];
-}
+import { NxDialogComponent } from '../../../components/nx-dialog/nx-dialog';
+import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
+import { Category, Product } from '../../../interfaces/catalog.interface';
 
 @Component({
   selector: 'app-products',
@@ -48,14 +19,17 @@ export interface Product {
     ReactiveFormsModule,
     LucideAngularModule,
     MatSelectModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    NxDialogComponent
   ],
   templateUrl: './products.html',
   styleUrl: './products.scss'
 })
-export class Products implements OnInit {
+export class ProductsComponent implements OnInit {
   private catalogService = inject(CatalogService);
   private fb = inject(FormBuilder);
+  private searchSubject = new Subject<string>();
+  private searchSubscription!: Subscription;
 
   // ─── ESTADOS DA LISTAGEM ────────────────────────────────────
   products = signal<Product[]>([]);
@@ -70,13 +44,27 @@ export class Products implements OnInit {
   totalPages = signal<number>(1);
   totalItems = signal<number>(0);
   lowStockCount = signal<number>(0);
+  
 
   // ─── ESTADOS GERAIS DE MODAIS ───────────────────────────────
   isSaving = signal<boolean>(false);
 
+  // ─── MODAIS UNIVERSAIS (Confirmação e Erro) ─────────────────
+  isConfirmModalOpen = signal(false);
+  itemToDelete = signal<Product | null>(null);
+  isDeleting = signal(false);
+  
+
+  showErrorModal = signal(false);
+  errorMessage = signal('');
+
   // ─── MODAL: MOVIMENTAR ESTOQUE ──────────────────────────────
   isStockModalOpen = signal<boolean>(false);
   selectedProduct = signal<Product | null>(null);
+
+  // ─── SINAIS DE CONTROLE DE IMAGEM ───────────────────────────
+  selectedFile = signal<File | null>(null);
+  imagePreview = signal<string | null>(null);
 
   stockOperations = [
     { label: 'Entrada', value: 'IN' },
@@ -94,13 +82,12 @@ export class Products implements OnInit {
   isModalOpen = signal<boolean>(false);
   isEditing = signal<boolean>(false);
   currentId = signal<string | null>(null);
-  showFiscal = signal<boolean>(false); // 👈 Toggle da seção fiscal
+  showFiscal = signal<boolean>(false);
 
-  // 👈 O formulário que faltava para a tela de criar produto funcionar
   productForm = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     unit: ['UN'],
-    category_id: [''],
+    category_ids: [[] as string[]],
     description: [''],
     price: [0, [Validators.required, Validators.min(0.01)]],
     cost_price: [0],
@@ -109,26 +96,57 @@ export class Products implements OnInit {
     stock_min: [0, Validators.min(0)],
     ncm: [''],
     cfop: [''],
-    is_active: [true]
+    is_active: [true],
+    barcodes: this.fb.array([])
   });
 
-  // 👈 Cálculo da margem em tempo real integrado com o form
   calculatedMargin = computed(() => {
-    // Escuta os valores diretamente do FormGroup
     const price = this.productForm.value.price || 0;
     const cost = this.productForm.value.cost_price || 0;
-
     if (price <= 0 || cost <= 0) return null;
     return ((price - cost) / price) * 100;
   });
 
-  // ============================================================
-  // INICIALIZAÇÃO
-  // ============================================================
+
+  // ─── GETTERS E CONTROLES DO FORMARRAY (BARCODES) ─────────────
+  get barcodes(): FormArray {
+    return this.productForm.get('barcodes') as FormArray;
+  }
+
+  addBarcode(code = '', unit = 'UN') {
+    this.barcodes.push(this.fb.group({
+      code: [code, Validators.required],
+      unit: [unit]
+    }));
+  }
+
+  removeBarcode(index: number) {
+    this.barcodes.removeAt(index);
+  }
+
   ngOnInit() {
     this.loadCategories();
     this.loadProducts();
     this.checkLowStock();
+    this.searchSubscription = this.searchSubject.pipe(
+      debounceTime(400), // Espera 400ms após o usuário parar de digitar
+      distinctUntilChanged() // Só faz a requisição se o texto for diferente da última busca
+    ).subscribe((searchTerm) => {
+      this.currentPage.set(1); // Volta para a página 1
+      this.loadProducts();     // Faz a busca real no backend
+    });
+  }
+
+  onSearchChange(value: string) {
+    this.searchTerm.set(value); // Atualiza o seu signal para o input não perder o valor
+    this.searchSubject.next(value); // Envia a letra para o canal (que vai aplicar o delay de 400ms)
+  }
+
+  ngOnDestroy() {
+    // Boa prática: limpa a inscrição quando sair da tela
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
   }
 
   loadCategories() {
@@ -145,6 +163,7 @@ export class Products implements OnInit {
   }
 
   loadProducts(lowStockOnly = false) {
+  
     this.isLoading.set(true);
     const filters: any = { page: this.currentPage(), limit: 10, name: this.searchTerm() };
 
@@ -154,7 +173,7 @@ export class Products implements OnInit {
 
     this.catalogService.getProducts(filters).subscribe({
       next: (res: any) => {
-        this.products.set(res.data);
+        this.products.set(res.data);       
         this.totalPages.set(res.meta.total_pages);
         this.totalItems.set(res.meta.total);
         this.isLoading.set(false);
@@ -163,10 +182,13 @@ export class Products implements OnInit {
     });
   }
 
-  // ============================================================
-  // BUSCA E FILTROS
-  // ============================================================
-  onSearch() {
+// Helper para formatar a exibição das categorias na tabela
+  getCategoryNames(product: Product): string {
+    if (!product.categories || product.categories.length === 0) return '—';
+    return product.categories.map(c => c.name).join(', ');
+  }
+
+  onSearch() { 
     this.currentPage.set(1);
     this.loadProducts();
   }
@@ -183,58 +205,68 @@ export class Products implements OnInit {
     this.loadProducts(true);
   }
 
-  // ============================================================
-  // AÇÕES RÁPIDAS DA TABELA
-  // ============================================================
   toggleProduct(product: Product) {
     const newStatus = !product.is_active;
     this.products.update(prods => prods.map(p => p.id === product.id ? { ...p, is_active: newStatus } : p));
 
     this.catalogService.pauseProduct(product.id).subscribe({
       error: () => {
-        alert('Erro ao atualizar status. Revertendo...');
+        this.showError('Erro ao atualizar status. Revertendo...');
         this.products.update(prods => prods.map(p => p.id === product.id ? { ...p, is_active: !newStatus } : p));
       }
     });
   }
 
-  // ============================================================
-  // MODAL DE CRIAR/EDITAR PRODUTO (Integrado!)
-  // ============================================================
   toggleFiscal() {
     this.showFiscal.update(v => !v);
   }
 
   openModal(product?: Product) {
+    this.barcodes.clear(); // Limpa os barcodes residuais
+    this.imagePreview.set(null);
+    this.selectedFile.set(null);
+
     if (product) {
       this.isEditing.set(true);
       this.currentId.set(product.id);
-
-      // Se tiver dados fiscais, já abre a aba
       if (product.ncm || product.cfop) this.showFiscal.set(true);
 
-      // Preenche o form
+      this.imagePreview.set(product.image_url || null);
+
+      // Prepara os IDs das categorias para o mat-select múltiplo
+      const categoryIds = product.categories?.map(c => c.id) || [];
+
       this.productForm.patchValue({
         name: product.name,
         unit: product.unit || 'UN',
-        category_id: product.category_id || '',
+        category_ids: categoryIds,
         description: product.description || '',
-        price: product.price,
-        cost_price: product.cost_price || 0,
-        price_wholesale: product.price_wholesale || 0,
+        price: Number(product.price),
+        cost_price: Number(product.cost_price) || 0,
+        price_wholesale: Number(product.price_wholesale) || 0,
         stock_qty: product.stock_qty || 0,
         stock_min: product.stock_min || 0,
         ncm: product.ncm || '',
         cfop: product.cfop || '',
         is_active: product.is_active
       });
+
+      // Popula o FormArray com os barcodes vindos do banco
+      product.barcodes?.forEach(bc => this.addBarcode(bc.code, bc.unit));
     } else {
       this.isEditing.set(false);
       this.currentId.set(null);
       this.showFiscal.set(false);
-      this.productForm.reset({ is_active: true, unit: 'UN', price: 0, cost_price: 0, stock_qty: 0, stock_min: 0 });
+      this.productForm.reset({ 
+        is_active: true, 
+        unit: 'UN', 
+        price: 0, 
+        cost_price: 0, 
+        stock_qty: 0, 
+        stock_min: 0,
+        category_ids: []
+      });
     }
-
     this.isModalOpen.set(true);
   }
 
@@ -242,15 +274,57 @@ export class Products implements OnInit {
     this.isModalOpen.set(false);
   }
 
-  onSubmit() {
-    if (this.productForm.invalid || this.isSaving()) return;
+  // ─── DELETAR PRODUTO (MODAL UNIVERSAL) ──────────────────────
+  openDeleteConfirm(product: Product) {
+    this.itemToDelete.set(product);
+    this.isConfirmModalOpen.set(true);
+  }
 
+  closeDeleteConfirm() {
+    this.isConfirmModalOpen.set(false);
+    this.itemToDelete.set(null);
+  }
+
+  confirmDelete() {
+    const product = this.itemToDelete();
+    if (!product) return;
+
+    this.isDeleting.set(true);
+
+    this.catalogService.deleteProduct(product.id).subscribe({
+      next: () => {
+        this.products.update(prods => prods.filter(p => p.id !== product.id));
+        this.closeDeleteConfirm();
+        this.isDeleting.set(false);
+      },
+      error: (err: any) => {
+        console.error('Erro ao deletar produto:', err);
+        const msg = err.error?.message || 'Erro ao excluir o produto. Ele pode estar vinculado a outras áreas do sistema.';
+        this.isDeleting.set(false);
+        this.closeDeleteConfirm();
+        this.showError(msg);
+      }
+    });
+  }
+
+  // ─── SALVAR PRODUTO ───────────────────────────────────────
+  onSubmit() {
+    
+    if (this.productForm.invalid || this.isSaving()) {
+      this.productForm.markAllAsTouched();
+      return;
+    }
+    
     this.isSaving.set(true);
-    const data = this.productForm.getRawValue();
+    const formValues = this.productForm.getRawValue();
+    
+    // Delega a montagem complexa do FormData
+    const formData: any = this.buildFormData(formValues, this.selectedFile());
+    
 
     const request$ = this.isEditing()
-      ? this.catalogService.updateProduct(this.currentId()!, data)
-      : this.catalogService.createProduct(data);
+      ? this.catalogService.updateProduct(this.currentId()!, formData)
+      : this.catalogService.createProduct(formData);
 
     request$.subscribe({
       next: () => {
@@ -259,16 +333,40 @@ export class Products implements OnInit {
         this.closeModal();
         this.isSaving.set(false);
       },
-      error: () => {
-        alert('Erro ao salvar os dados do produto.');
+      error: (err) => {
+        console.error(err);
+        this.showError('Erro ao salvar os dados do produto. Verifique sua conexão.');
         this.isSaving.set(false);
       }
     });
   }
 
-  // ============================================================
-  // MODAL DE ESTOQUE (Movimentação Avulsa)
-  // ============================================================
+
+private buildFormData(formValues: any, file: File | null): FormData {
+    const formData = new FormData();
+
+    Object.entries(formValues).forEach(([key, value]) => {
+      // Ignora nulos e vazios
+      if (value === null || value === undefined || value === '') return;
+
+      // 🚨 A MÁGICA ESTÁ AQUI: Agrupamos os arrays numa única string JSON 🚨
+      if ((key === 'category_ids' || key === 'barcodes') && Array.isArray(value)) {
+        formData.append(key, JSON.stringify(value));
+      } 
+      else {
+        // Campos normais (nome, preço, etc)
+        formData.append(key, (value as any).toString());
+      }
+    });
+
+    if (file) {
+      formData.append('image', file);
+    }
+
+    return formData;
+  }
+
+  // ─── MODAL DE ESTOQUE ───────────────────────────────────────
   openStockModal(product: Product) {
     this.selectedProduct.set(product);
     this.stockForm.reset({ operation: 'IN', quantity: 1, reason: '' });
@@ -300,7 +398,7 @@ export class Products implements OnInit {
         this.isSaving.set(false);
       },
       error: () => {
-        alert('Erro ao movimentar o estoque. Verifique os dados.');
+        this.showError('Erro ao movimentar o estoque. Verifique os dados.');
         this.isSaving.set(false);
       }
     });
@@ -316,5 +414,31 @@ export class Products implements OnInit {
     if (currentVal > 0) {
       this.productForm.patchValue({ [controlName]: currentVal - 1 });
     }
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile.set(file);
+      const reader = new FileReader();
+      reader.onload = (e: any) => this.imagePreview.set(e.target.result);
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeImage() {
+    this.selectedFile.set(null);
+    this.imagePreview.set(null);
+  }
+
+  // ─── CONTROLE DO MODAL DE ERRO ────────────────────────────
+  showError(msg: string) {
+    this.errorMessage.set(msg);
+    this.showErrorModal.set(true);
+  }
+
+  closeErrorModal() {
+    this.showErrorModal.set(false);
+    this.errorMessage.set('');
   }
 }

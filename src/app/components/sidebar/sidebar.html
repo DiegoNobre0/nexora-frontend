@@ -18,15 +18,21 @@
     </nav>
   </div>
 
-  <div class="menu-section">
+ <div class="menu-section">
     @if (!isCollapsed()) { <span class="section-title">Operação</span> }
     <nav class="nav-group">
-      <a routerLink="/orders" routerLinkActive="active" class="menu-item">
-        <lucide-icon name="calendar" class="sidebar-icon"></lucide-icon>
-        @if (!isCollapsed()) { <span class="label">Pedidos Kanban</span> }
+      
+      <a routerLink="/pdv" routerLinkActive="active" class="menu-item">
+        <lucide-icon name="shopping-cart" class="sidebar-icon"></lucide-icon>
+        @if (!isCollapsed()) { <span class="label">Frente de Caixa (PDV)</span> }
+      </a>
+
+      <a routerLink="/orders/kanban" routerLinkActive="active" class="menu-item">
+        <lucide-icon name="trello" class="sidebar-icon"></lucide-icon>
+        @if (!isCollapsed()) { <span class="label">Fila de Pedidos</span> }
       </a>
       
-    <div class="menu-group">
+      <div class="menu-group">
         <a class="menu-item cursor-pointer" 
            [class.active]="isCatalogRoute()" 
            (click)="toggleCatalog()">

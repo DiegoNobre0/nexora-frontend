@@ -22,7 +22,25 @@ import {
   Tag,
   FileText,
   ChevronUp,
-  PackagePlus
+  PackagePlus,
+  Check,
+  XCircle,
+  AlertTriangle,
+  ShoppingCart,
+  Trello,
+  Inbox,
+  CheckCircle,
+  PackageCheck,
+  ChefHat,
+  Truck,
+  SearchX,
+  CreditCard,
+  Banknote,
+  QrCode,
+  Utensils,
+  Store,
+  Bike,
+  ArrowRight
 } from 'lucide-angular';
 
 // Registra os dados de localidade para o Brasil
@@ -54,7 +72,9 @@ export const appConfig: ApplicationConfig = {
         Pencil, Trash2, ChevronLeft, ChevronRight, Plus, MessageCircle,
         Settings, Circle, Menu, Search, Moon, Mail, Bell, ArrowLeft,
         TrendingUp, Clock, MoreVertical, ChevronDown, RefreshCw, Eye, EyeOff,
-        Package,Save, ImagePlus, X , Gift, Image ,Tag , FileText ,ChevronUp ,PackagePlus
+        Package,Save, ImagePlus, X , Gift, Image ,Tag , FileText ,ChevronUp ,PackagePlus,
+        Check,XCircle ,AlertTriangle, ShoppingCart,Trello,Inbox, CheckCircle,PackageCheck,
+        ChefHat,Truck, SearchX, CreditCard, Banknote, QrCode, Utensils, Store, Bike , ArrowRight
       })
     )
   ]

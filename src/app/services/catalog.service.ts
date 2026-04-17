@@ -2,72 +2,9 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../enviroments/environment';
+import { Category, PaginatedResponse, Product, PromoKit, StockMovementParams } from '../interfaces/catalog.interface';
 
 // Resposta padrão paginada do nosso backend
-export interface PaginatedResponse<T> {
-  data: T[];
-  meta: {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-  };
-}
-
-export interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  is_active: boolean;
-  _count?: {
-    products: number;
-  };
-}
-
-export interface ProductBarcode {
-  id: string;
-  code: string;
-  unit: string;
-}
-
-export interface Product {
-  id: string;
-  name: string;
-  price: number; // No front podemos tratar Decimal como number e formatar no pipe
-  cost_price?: number;
-  stock_qty: number;
-  stock_min: number;
-  category_id: string;
-  is_active: boolean;
-  category?: Category;
-  barcodes?: ProductBarcode[];
-}
-
-export interface PromoKitItem {
-  id: string;
-  product_id: string;
-  quantity: number;
-  product?: { name: string };
-}
-
-export interface PromoKit {
-  id: string;
-  name: string;
-  price: number;
-  description?: string;
-  image_url_1?: string;
-  image_url_2?: string;
-  image_url_3?: string;
-  image_url_4?: string;
-  is_active: boolean;
-  items?: PromoKitItem[];
-}
-
-export interface StockMovementParams {
-  operation: 'IN' | 'OUT' | 'ADJUST';
-  quantity: number;
-  reason?: string;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -130,6 +67,10 @@ export class CatalogService {
     return this.http.post<Product>(`${this.apiUrl}/products`, data);
   }
 
+  deleteProduct(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/products/${id}`);
+  }
+
   updateProduct(id: string, data: Partial<Product>): Observable<Product> {
     return this.http.put<Product>(`${this.apiUrl}/products/${id}`, data);
   }
@@ -154,5 +95,10 @@ export class CatalogService {
     // Data pode ser FormData se tiver upload de arquivo físico, 
     // ou JSON normal se as imagens já vierem como URL (S3, Firebase, etc)
     return this.http.post<PromoKit>(`${this.apiUrl}/promo-kits`, data);
+  }
+
+  updatePromoKit(id: string, data: any): Observable<any> {
+    // Usamos PUT porque vamos atualizar o registro existente no backend
+    return this.http.put<any>(`${this.apiUrl}/promo-kits/${id}`, data);
   }
 }

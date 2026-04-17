@@ -1,0 +1,382 @@
+<div class="pdv-page">
+
+    <!-- Coluna: Catálogo -->
+    <div class="pdv-catalog">
+
+        <!-- Busca -->
+        <div class="pdv-search">
+            <lucide-icon name="search" class="pdv-search__icon"></lucide-icon>
+            <input type="text" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)"
+                placeholder="Buscar produto ou código..." class="nexora-input pdv-search__input">
+        </div>
+
+        <!-- Categorias -->
+        <div class="pdv-categories-wrapper">
+
+            <button class="scroll-arrow-btn" (click)="scrollCategories(-250)">
+                <lucide-icon name="chevron-left"></lucide-icon>
+            </button>
+
+            <div class="pdv-categories" #categoryContainer (mousedown)="startDrag($event)" (mousemove)="onDrag($event)">
+
+                <button (click)="selectCategory('', $event)" class="pdv-cat-btn"
+                    [class.pdv-cat-btn--active]="activeCategory() === ''">
+                    Todos
+                </button>
+
+                @for (cat of categories(); track cat.id) {
+                <button (click)="selectCategory(cat.id, $event)" class="pdv-cat-btn"
+                    [class.pdv-cat-btn--active]="activeCategory() === cat.id">
+                    {{ cat.name }}
+                </button>
+                }
+            </div>
+            <button class="scroll-arrow-btn" (click)="scrollCategories(250)">
+                <lucide-icon name="chevron-right"></lucide-icon>
+            </button>
+
+        </div>
+
+        <!-- Grid de produtos -->
+        @if (isLoading()) {
+        <div class="pdv-grid">
+            @for (i of [1,2,3,4,6,7,8,9]; track i) {
+            <div class="skeleton pdv-product-card-skeleton"></div>
+            }
+        </div>
+        } @else {
+        <div class="pdv-grid">
+            @for (product of filteredProducts(); track product.id) {
+            <button class="pdv-product-card" (click)="addToCart(product)">
+                <div class="pdv-product-card__img-wrap">
+                    @if (product.image_url) {
+                    <img [src]="product.image_url" [alt]="product.name" class="pdv-product-card__img">
+                    } @else {
+                    <lucide-icon name="package" class="pdv-product-card__placeholder"></lucide-icon>
+                    }
+                </div>
+                <div class="pdv-product-card__info">
+                    <p class="pdv-product-card__name">{{ product.name }}</p>
+                    <p class="pdv-product-card__price">{{ formatCurrency(product.price) }}</p>
+                    @if (product.stock_qty <= product.stock_min) { <span class="pdv-product-card__low-stock">Estoque
+                        baixo</span>
+                        }
+                </div>
+            </button>
+            } @empty {
+            <div class="pdv-empty">
+                <div class="pdv-empty__icon-wrapper">
+                    <lucide-icon name="search-x" class="pdv-empty__icon"></lucide-icon>
+                </div>
+                <p class="pdv-empty__title">Nenhum produto encontrado</p>
+                <p class="pdv-empty__sub">Tente buscar por outro nome ou limpe a categoria.</p>
+            </div>
+            }
+        </div>
+        }
+
+    </div>
+
+    <!-- Coluna: Carrinho -->
+    <div class="pdv-cart">
+
+        <div class="pdv-cart__header">
+            <h2 class="pdv-cart__title">
+                <lucide-icon name="shopping-cart" class="pdv-cart__title-icon"></lucide-icon>
+                Carrinho
+                @if (cartCount() > 0) {
+                <span class="pdv-cart__count">{{ cartCount() }}</span>
+                }
+            </h2>
+            @if (cart().length > 0) {
+            <button (click)="clearCart()" class="pdv-cart__clear">
+                <lucide-icon name="trash-2" class="action-btn__icon"></lucide-icon>
+                Limpar
+            </button>
+            }
+        </div>
+
+        <div class="pdv-cart__items">
+            @for (item of cart(); track item.product.id) {
+            <div class="cart-item">
+                <div class="cart-item__info">
+                    <p class="cart-item__name">{{ item.product.name }}</p>
+                    <p class="cart-item__price">{{ formatCurrency(item.product.price) }} / {{ item.product.unit }}</p>
+                </div>
+                <div class="cart-item__controls">
+                    <div class="qty-control">
+                        <button (click)="updateQuantity(item.product.id, -1)" class="qty-control__btn">−</button>
+                        <span class="qty-control__value">{{ item.quantity }}</span>
+                        <button (click)="updateQuantity(item.product.id, +1)" class="qty-control__btn">+</button>
+                    </div>
+                    <span class="cart-item__total">{{ formatCurrency(item.product.price * item.quantity) }}</span>
+                    <button (click)="removeFromCart(item.product.id)" class="action-btn action-btn--danger">
+                        <lucide-icon name="x" class="action-btn__icon"></lucide-icon>
+                    </button>
+                </div>
+            </div>
+            } @empty {
+            <div class="pdv-cart__empty">
+                <div class="pdv-cart__empty-wrapper">
+                    <lucide-icon name="shopping-cart" class="pdv-cart__empty-icon"></lucide-icon>
+                </div>
+                <p class="pdv-cart__empty-title">Seu carrinho está vazio</p>
+                <p class="pdv-cart__empty-sub">Clique em um produto ao lado para iniciar a venda.</p>
+            </div>
+            }
+        </div>
+
+        <!-- Totais -->
+        @if (cart().length > 0) {
+        <div class="pdv-cart__totals">
+            <div class="pdv-cart__total-row">
+                <span>Subtotal</span>
+                <span>{{ formatCurrency(cartTotal()) }}</span>
+            </div>
+            <button (click)="openCheckout()" class="btn-primary pdv-checkout-btn">
+                <lucide-icon name="credit-card" class="btn-icon"></lucide-icon>
+                Finalizar · {{ formatCurrency(cartTotal()) }}
+            </button>
+        </div>
+        }
+
+    </div>
+
+    <!-- Modal: Checkout -->
+    @if (isCheckoutOpen()) {
+    <div class="modal-overlay" (click)="closeCheckout()">
+        <div class="modal-card modal-card--lg" (click)="$event.stopPropagation()">
+
+            @if (!orderSuccess()) {
+            <div class="modal-header">
+                <h2 class="modal-header__title">Finalizar Venda</h2>
+                <button (click)="closeCheckout()" class="modal-header__close">
+                    <lucide-icon name="x" class="action-btn__icon"></lucide-icon>
+                </button>
+            </div>
+
+            <div class="checkout-form">
+
+                <div class="order-type-tabs">
+                    <button (click)="orderType.set('COUNTER')" [class.active]="orderType() === 'COUNTER'"
+                        class="type-tab">
+                        <lucide-icon name="store"></lucide-icon> Balcão
+                    </button>
+                    <button (click)="orderType.set('DELIVERY')" [class.active]="orderType() === 'DELIVERY'"
+                        class="type-tab">
+                        <lucide-icon name="bike"></lucide-icon> Entrega
+                    </button>
+                    <button (click)="orderType.set('PICKUP')" [class.active]="orderType() === 'PICKUP'"
+                        class="type-tab">
+                        <lucide-icon name="package"></lucide-icon> Retirada
+                    </button>
+                </div>
+
+                <div class="checkout-section">
+                    <h3 class="checkout-section__title">Identificação do Cliente</h3>
+
+                    @if (selectedClient()) {
+                    <div class="selected-client-card">
+                        <div class="selected-client-card__info">
+                            <p class="fw-bold text-white">{{ selectedClient().name }}</p>
+                            <p class="text-sm text-muted">{{ selectedClient().phone }}</p>
+                        </div>
+                        <button (click)="removeClient()" class="action-btn action-btn--danger">
+                            <lucide-icon name="x" class="action-btn__icon"></lucide-icon>
+                        </button>
+                    </div>
+
+                    @if (orderType() === 'DELIVERY') {
+                    <div class="form-field mt-3">
+                        <label class="form-label">Endereço de Entrega</label>
+                        <select class="nexora-input">
+                            <option>Selecione um endereço cadastrado...</option>
+                        </select>
+                    </div>
+                    }
+
+                    } @else {
+                    @if (isCreatingClient()) {
+                    <div class="quick-client-form">
+
+                        <div class="form-row">
+                            <div class="form-field flex-1">
+                                <label class="form-label">Telefone (WhatsApp)</label>
+                                <input type="text" class="nexora-input" [ngModel]="newClientPhone()"
+                                    (ngModelChange)="newClientPhone.set($event)" placeholder="(00) 00000-0000">
+                            </div>
+                            <div class="form-field flex-2">
+                                <label class="form-label">Nome Completo</label>
+                                <input type="text" class="nexora-input" [ngModel]="newClientName()"
+                                    (ngModelChange)="newClientName.set($event)" placeholder="Nome do cliente">
+                            </div>
+                        </div>
+
+                        @if (orderType() === 'DELIVERY') {
+                        <div class="form-divider">Endereço de Entrega</div>
+
+                        <div class="form-row">
+                            <div class="form-field flex-1">
+                                <label class="form-label">CEP</label>
+                                <input type="text" class="nexora-input" [ngModel]="newClientZip()"
+                                    (ngModelChange)="newClientZip.set($event)" placeholder="00000-000">
+                            </div>
+                            <div class="form-field flex-2">
+                                <label class="form-label">Rua / Logradouro</label>
+                                <input type="text" class="nexora-input" [ngModel]="newClientStreet()"
+                                    (ngModelChange)="newClientStreet.set($event)" placeholder="Nome da rua">
+                            </div>
+                            <div class="form-field" style="width: 80px;">
+                                <label class="form-label">Nº</label>
+                                <input type="text" class="nexora-input" [ngModel]="newClientNumber()"
+                                    (ngModelChange)="newClientNumber.set($event)" placeholder="Nº">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-field flex-1">
+                                <label class="form-label">Bairro</label>
+                                <input type="text" class="nexora-input" [ngModel]="newClientDistrict()"
+                                    (ngModelChange)="newClientDistrict.set($event)" placeholder="Bairro">
+                            </div>
+                            <div class="form-field flex-1">
+                                <label class="form-label">Cidade</label>
+                                <input type="text" class="nexora-input" [ngModel]="newClientCity()"
+                                    (ngModelChange)="newClientCity.set($event)" placeholder="Cidade">
+                            </div>
+                            <div class="form-field" style="width: 80px;">
+                                <label class="form-label">UF</label>
+                                <input type="text" class="nexora-input" [ngModel]="newClientState()"
+                                    (ngModelChange)="newClientState.set($event)" placeholder="UF">
+                            </div>
+                        </div>
+                        }
+
+                        <div class="quick-client-form__actions">
+                            <button (click)="isCreatingClient.set(false)" class="btn-cancel btn-sm">Cancelar</button>
+                            <button (click)="saveNewClient()" class="btn-primary btn-sm">Confirmar Dados</button>
+                        </div>
+                    </div>
+                    } @else {
+                    <div class="client-search-wrapper">
+                        <lucide-icon name="search" class="client-search-icon"></lucide-icon>
+                        <input type="text" class="nexora-input"  [ngModel]="clientSearchTerm()"
+                            (ngModelChange)="onClientSearch($event)" placeholder="Buscar por nome ou telefone...">
+
+                        <button (click)="isCreatingClient.set(true)" class="btn-outline btn-sm">Novo</button>
+
+                        @if (foundClients().length > 0) {
+                        <div class="client-search-results">
+                            @for (client of foundClients(); track client.id) {
+                            <div class="client-result-item" (click)="selectClient(client)">
+                                <span class="text-white">{{ client.name }}</span>
+                                <span class="text-muted text-sm">{{ client.phone }}</span>
+                            </div>
+                            }
+                        </div>
+                        }
+                    </div>
+                    }
+                    }
+                </div>
+
+                <div class="checkout-grid">
+
+                    <div class="checkout-col-left">
+                        <div class="checkout-section">
+                            <h3 class="checkout-section__title">Pagamento e Detalhes</h3>
+
+                            <div class="payment-grid">
+                                @for (method of paymentMethods; track method.value) {
+                                <button type="button" (click)="selectedPayment.set(method.value)" class="payment-btn"
+                                    [class.payment-btn--active]="selectedPayment() === method.value">
+                                    <lucide-icon [name]="method.icon" class="payment-btn__icon"></lucide-icon>
+                                    {{ method.label }}
+                                </button>
+                                }
+                            </div>
+
+                            <div class="form-row mt-3">
+                                <div class="form-field flex-1">
+                                    <label class="form-label">Desconto (R$)</label>
+                                    <input type="number" class="nexora-input" min="0" [ngModel]="discount()"
+                                        (ngModelChange)="discount.set($event)" placeholder="0,00">
+                                </div>
+                                <div class="form-field flex-2">
+                                    <label class="form-label">Observação <span
+                                            class="form-label--optional">(opcional)</span></label>
+                                    <input type="text" class="nexora-input" [ngModel]="orderNotes()"
+                                        (ngModelChange)="orderNotes.set($event)"
+                                        placeholder="Observações sobre o pedido...">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkout-col-right">
+                        <div class="checkout-section">
+                            <h3 class="checkout-section__title">Resumo do Pedido</h3>
+                            <div class="checkout-summary">
+                                @for (item of cart(); track item.product.id) {
+                                <div class="checkout-summary__row">
+                                    <span>{{ item.quantity }}x {{ item.product.name }}</span>
+                                    <span>{{ formatCurrency(item.product.price * item.quantity) }}</span>
+                                </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="checkout-total">
+                            <div class="checkout-total__details">
+                                <div class="checkout-total__line">
+                                    <span class="text-sm text-muted">Subtotal:</span>
+                                    <span class="text-sm text-muted">{{ formatCurrency(cartTotal()) }}</span>
+                                </div>
+                                @if (orderType() === 'DELIVERY') {
+                                <div class="checkout-total__line">
+                                    <span class="text-sm text-muted">Frete:</span>
+                                    <span class="text-sm text-muted">{{ formatCurrency(deliveryFee()) }}</span>
+                                </div>
+                                }
+                            </div>
+                            <div class="checkout-total__final">
+                                <span class="checkout-total__label">Total a cobrar</span>
+                                <span class="checkout-total__value">{{ formatCurrency(finalTotal()) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button (click)="closeCheckout()" class="btn-cancel">Cancelar</button>
+                    <button (click)="confirmOrder()" [disabled]="isProcessing()" class="btn-primary">
+                        @if (isProcessing()) {
+                        <lucide-icon name="refresh-cw" class="btn-icon btn-icon--spin"></lucide-icon>
+                        Processando...
+                        } @else {
+                        <lucide-icon name="check" class="btn-icon"></lucide-icon>
+                        Confirmar Venda
+                        }
+                    </button>
+                </div>
+
+            </div>
+            } @else {
+
+            <div class="checkout-success">
+                <div class="checkout-success__icon">
+                    <lucide-icon name="check-circle" class="checkout-success__check"></lucide-icon>
+                </div>
+                <h2 class="checkout-success__title">Venda Confirmada!</h2>
+                <p class="checkout-success__sub">Pedido #{{ lastOrderId() }} registrado com sucesso.</p>
+                <button (click)="closeCheckout()" class="btn-primary checkout-success__btn">
+                    Nova Venda
+                </button>
+            </div>
+
+            }
+        </div>
+    </div>
+    }
+
+</div>

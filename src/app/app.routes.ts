@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+// ... (seus imports anteriores)
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Agenda } from './pages/agenda/agenda';
 import { Whatsapp } from './pages/whatsapp/whatsapp';
@@ -9,37 +10,41 @@ import { Clientes } from './pages/clientes/clientes';
 import { authGuard } from './guards/auth-guard';
 import { Login } from './pages/login/login';
 import { Signup } from './pages/signup/signup';
-import { Orders } from './pages/orders/orders';
-import { Products } from './pages/catalog/products/products';
+
 import { CategoriesComponent} from './pages/catalog/categories/categories';
 import { KitsComponent} from './pages/catalog/kits/kits';
+import { ProductsComponent } from './pages/catalog/products/products';
 
+// 🔥 NOVOS IMPORTS DA FASE 3/4 🔥
+import { KanbanComponent } from './pages/orders/kanban/kanban';
+import { OrderDetailComponent } from './pages/orders/detail/detail';
+import { PdvComponent } from './pages/orders/pdv/pdv';
 
 export const routes: Routes = [
   {
     path: '',
     component: MainLayout,
-    canActivate: [authGuard], // 🛡️ Protegendo tudo aqui!
+    canActivate: [authGuard],
     children: [
-      // 🔥 REDIRECIONAMENTO PRINCIPAL 🔥
-      // Quando acessar a raiz do MainLayout, joga automaticamente para o dashboard
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-
       { path: 'dashboard', component: Dashboard },
-      { path: 'orders', component: Orders },
       { path: 'whatsapp', component: Whatsapp },
       { path: 'settings', component: Settings },
       { path: 'clientes', component: Clientes },
+      
+      // Catálogo
       { path: 'catalog', redirectTo: 'catalog/products', pathMatch: 'full' },
       { path: 'catalog/categories', component: CategoriesComponent },
-      { path: 'catalog/products', component: Products },
+      { path: 'catalog/products', component: ProductsComponent },
       { path: 'catalog/kits', component: KitsComponent },
+
+      // 🔥 NOVAS ROTAS (Substituíndo o antigo "Orders") 🔥
+      { path: 'orders/kanban', component: KanbanComponent },
+      { path: 'orders/:id', component: OrderDetailComponent },
+      { path: 'pdv', component: PdvComponent }, 
     ]
   },
   { path: 'login', component: Login },
   { path: 'signup', component: Signup },
-
-  // 🛡️ ROTA CURINGA (Tratamento de 404)
-  // Se o usuário digitar qualquer URL maluca, joga ele para a raiz (que vai pro dashboard)
   { path: '**', redirectTo: '' }
 ];

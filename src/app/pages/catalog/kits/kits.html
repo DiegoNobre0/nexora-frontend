@@ -13,222 +13,232 @@
 
   <div class="kits-grid">
     @if (isLoading()) {
-      @for (i of [1,2,3]; track i) {
-        <div class="kit-card kit-card--skeleton">
-          <div class="skeleton skeleton--kit-img"></div>
-          <div class="kit-card__body">
-            <div class="skeleton skeleton--text-md"></div>
-            <div class="skeleton skeleton--text-sm" style="margin-top: 8px; width: 60%"></div>
-          </div>
-        </div>
-      }
+    @for (i of [1,2,3]; track i) {
+    <div class="kit-card kit-card--skeleton">
+      <div class="skeleton skeleton--kit-img"></div>
+      <div class="kit-card__body">
+        <div class="skeleton skeleton--text-md"></div>
+        <div class="skeleton skeleton--text-sm" style="margin-top: 8px; width: 60%"></div>
+      </div>
+    </div>
+    }
     } @else if (kits().length === 0) {
-      <div class="kits-empty">
-        <div class="empty-state">
-          <div class="empty-state__icon-wrap">
-            <lucide-icon name="gift" class="empty-state__icon"></lucide-icon>
+    <div class="kits-empty">
+      <div class="empty-state">
+        <div class="empty-state__icon-wrap">
+          <lucide-icon name="gift" class="empty-state__icon"></lucide-icon>
+        </div>
+        <p class="empty-state__text">Nenhum kit cadastrado ainda</p>
+        <button (click)="openModal()" class="empty-state__cta">Criar primeiro kit</button>
+      </div>
+    </div>
+    } @else {
+    @for (kit of kits(); track kit.id) {
+    <div class="kit-card">
+      <div class="kit-card__img-wrap">
+        @if (kit.image_url_1) {
+        <img [src]="kit.image_url_1" [alt]="kit.name" class="kit-card__img">
+        } @else {
+        <div class="kit-card__img-placeholder">
+          <lucide-icon name="image" class="kit-card__img-placeholder-icon"></lucide-icon>
+        </div>
+        }
+        <span class="kit-card__badge" [ngClass]="kit.is_active ? 'badge--active' : 'badge--inactive'">
+          {{ kit.is_active ? 'Ativo' : 'Pausado' }}
+        </span>
+      </div>
+
+      <div class="kit-card__body">
+        <h3 class="kit-card__name">{{ kit.name }}</h3>
+        <div class="kit-card__items">
+          @for (item of kit.items; track item.id) {
+          <span class="kit-card__item-tag">
+            {{ item.quantity }}x {{ item.product.name }}
+          </span>
+          }
+        </div>
+        <p class="kit-card__desc">{{ kit.description }}</p>
+        <div class="kit-card__footer">
+          <span class="kit-card__price">R$ {{ kit.price | number:'1.2-2' }}</span>
+          <div class="kit-card__actions">
+            <button (click)="editKit(kit)" class="action-btn" title="Editar">
+              <lucide-icon name="pencil" class="action-btn__icon"></lucide-icon>
+            </button>
+            <button (click)="toggleKit(kit.id)" class="action-btn action-btn--primary"
+              [title]="kit.is_active ? 'Pausar' : 'Reativar'">
+              <lucide-icon [name]="kit.is_active ? 'eye-off' : 'eye'" class="action-btn__icon"></lucide-icon>
+            </button>
+            <button (click)="deleteKit(kit.id)" class="action-btn action-btn--danger" title="Excluir">
+              <lucide-icon name="trash-2" class="action-btn__icon"></lucide-icon>
+            </button>
           </div>
-          <p class="empty-state__text">Nenhum kit cadastrado ainda</p>
-          <button (click)="openModal()" class="empty-state__cta">Criar primeiro kit</button>
         </div>
       </div>
-    } @else {
-      @for (kit of kits(); track kit.id) {
-        <div class="kit-card">
-          <div class="kit-card__img-wrap">
-            @if (kit.image_url_1) {
-              <img [src]="kit.image_url_1" [alt]="kit.name" class="kit-card__img">
-            } @else {
-              <div class="kit-card__img-placeholder">
-                <lucide-icon name="image" class="kit-card__img-placeholder-icon"></lucide-icon>
-              </div>
-            }
-            <span class="kit-card__badge" [ngClass]="kit.is_active ? 'badge--active' : 'badge--inactive'">
-              {{ kit.is_active ? 'Ativo' : 'Pausado' }}
-            </span>
-          </div>
-
-          <div class="kit-card__body">
-            <h3 class="kit-card__name">{{ kit.name }}</h3>
-            <p class="kit-card__desc">{{ kit.description }}</p>
-            <div class="kit-card__footer">
-              <span class="kit-card__price">R$ {{ kit.price | number:'1.2-2' }}</span>
-              <div class="kit-card__actions">
-                <button (click)="editKit(kit)" class="action-btn" title="Editar">
-                  <lucide-icon name="pencil" class="action-btn__icon"></lucide-icon>
-                </button>
-                <button (click)="toggleKit(kit.id)" class="action-btn action-btn--primary" [title]="kit.is_active ? 'Pausar' : 'Reativar'">
-                  <lucide-icon [name]="kit.is_active ? 'eye-off' : 'eye'" class="action-btn__icon"></lucide-icon>
-                </button>
-                <button (click)="deleteKit(kit.id)" class="action-btn action-btn--danger" title="Excluir">
-                  <lucide-icon name="trash-2" class="action-btn__icon"></lucide-icon>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
+    </div>
+    }
     }
   </div>
 
   @if (isModalOpen()) {
-    <div class="modal-overlay" (click)="closeModal()">
-      <div class="modal-card modal-card--lg" (click)="$event.stopPropagation()">
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-card modal-card--lg" (click)="$event.stopPropagation()">
 
-        <div class="modal-header">
-          <div class="modal-header__info">
-            <h2 class="modal-header__title">
-              {{ isEditing() ? 'Editar Kit Promocional' : 'Novo Kit Promocional' }}
-            </h2>
-            <p class="modal-header__subtitle">
-              Configure detalhes, imagens e a composição do combo.
-            </p>
+      <div class="modal-header">
+        <div class="modal-header__info">
+          <h2 class="modal-header__title">
+            {{ isEditing() ? 'Editar Kit Promocional' : 'Novo Kit Promocional' }}
+          </h2>
+          <p class="modal-header__subtitle">
+            Configure detalhes, imagens e a composição do combo.
+          </p>
+        </div>
+        <button (click)="closeModal()" class="modal-header__close">
+          <lucide-icon name="x" class="action-btn__icon"></lucide-icon>
+        </button>
+      </div>
+
+      <form [formGroup]="kitForm" (ngSubmit)="onSubmit()" class="kit-modal-form">
+
+        <div class="kit-modal-section">
+          <p class="kit-modal-section__label">Informações Básicas</p>
+
+          <div class="form-field">
+            <label class="form-label">Nome do Combo/Kit <span class="form-label--required">*</span></label>
+            <input type="text" formControlName="name" class="nexora-input" placeholder="Ex: Combo Família Padrão">
           </div>
-          <button (click)="closeModal()" class="modal-header__close">
-            <lucide-icon name="x" class="action-btn__icon"></lucide-icon>
-          </button>
+
+          <div class="form-field">
+            <label class="form-label">Preço de Venda (R$) <span class="form-label--required">*</span></label>
+            <div class="input-prefix">
+              <span class="input-prefix__symbol">R$</span>
+              <input type="text" formControlName="price" class="nexora-input input-prefix__input" placeholder="0,00">
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label">Descrição <span class="form-label--optional">(enviada no WhatsApp)</span></label>
+            <textarea formControlName="description" class="nexora-input kit-modal-textarea"
+              placeholder="Descreva os benefícios e o que acompanha o kit..."></textarea>
+          </div>
         </div>
 
-        <form [formGroup]="kitForm" (ngSubmit)="onSubmit()" class="kit-modal-form">
-
-          <div class="kit-modal-section">
-            <p class="kit-modal-section__label">Informações Básicas</p>
-            
-            <div class="form-field">
-              <label class="form-label">Nome do Combo/Kit <span class="form-label--required">*</span></label>
-              <input type="text" formControlName="name" class="nexora-input" placeholder="Ex: Combo Família Padrão">
-            </div>
-
-            <div class="form-field">
-              <label class="form-label">Preço de Venda (R$) <span class="form-label--required">*</span></label>
-              <div class="input-prefix">
-                <span class="input-prefix__symbol">R$</span>
-                <input type="text" formControlName="price" class="nexora-input input-prefix__input" placeholder="0,00">
-              </div>
-            </div>
-
-            <div class="form-field">
-              <label class="form-label">Descrição <span class="form-label--optional">(enviada no WhatsApp)</span></label>
-              <textarea formControlName="description" class="nexora-input kit-modal-textarea" placeholder="Descreva os benefícios e o que acompanha o kit..."></textarea>
-            </div>
+        <div class="kit-modal-section">
+          <div class="kit-modal-section__header">
+            <p class="kit-modal-section__label">Fotos</p>
+            <span class="badge badge--inactive">{{ previews().length }} / 2</span>
           </div>
 
-          <div class="kit-modal-section">
-            <div class="kit-modal-section__header">
-              <p class="kit-modal-section__label">Fotos</p>
-              <span class="badge badge--inactive">{{ previews().length }} / 4</span>
-            </div>
-            
-            @if (previews().length < 4) {
-              <label class="upload-zone">
-                <lucide-icon name="image-plus" class="upload-zone__icon"></lucide-icon>
-                <span class="upload-zone__label">Clique para selecionar imagens</span>
-                <span class="upload-zone__hint">PNG, JPG até 5MB</span>
-                <input type="file" multiple accept="image/*" class="upload-zone__input" (change)="onFileSelected($event)">
-              </label>
+          @if (previews().length < 2) { <label class="upload-zone">
+            <lucide-icon name="image-plus" class="upload-zone__icon"></lucide-icon>
+            <span class="upload-zone__label">Clique para selecionar imagens</span>
+            <span class="upload-zone__hint">PNG, JPG até 5MB</span>
+            <input type="file" multiple accept="image/*" class="upload-zone__input" (change)="onFileSelected($event)">
+            </label>
             }
 
             @if (previews().length > 0) {
-              <div class="images-grid mt-3">
-                @for (preview of previews(); track $index) {
-                  <div class="image-thumb">
-                    <img [src]="preview" class="image-thumb__img" alt="Preview">
-                    <div class="image-thumb__overlay">
-                      <button type="button" (click)="removeImage($index)" class="image-thumb__remove">
-                        <lucide-icon name="trash-2" class="action-btn__icon"></lucide-icon>
-                      </button>
-                    </div>
-                  </div>
-                }
+            <div class="images-grid mt-3">
+              @for (preview of previews(); track $index) {
+              <div class="image-thumb">
+                <img [src]="preview" class="image-thumb__img" alt="Preview">
+                <div class="image-thumb__overlay">
+                  <button type="button" (click)="removeImage($index)" class="image-thumb__remove">
+                    <lucide-icon name="trash-2" class="action-btn__icon"></lucide-icon>
+                  </button>
+                </div>
               </div>
-            }
-          </div>
-
-          <div class="kit-modal-section">
-            <p class="kit-modal-section__label">Composição do Kit</p>
-
-            <mat-select (selectionChange)="addProduct($event.value)" class="nx-mat-select w-full" placeholder="+ Adicionar produto ao kit...">
-              @for (product of availableProducts(); track product.id) {
-                <mat-option [value]="product.id">{{ product.name }} (Estoque: {{ product.stock_qty }})</mat-option>
-              }
-            </mat-select>
-
-            <div class="kit-items mt-3">
-              @for (item of selectedItems(); track item.product.id) {
-                <div class="kit-item">
-                  <div class="kit-item__info">
-                    <p class="kit-item__name">{{ item.product.name }}</p>
-                    <p class="kit-item__cost">Custo un: R$ {{ item.product.cost_price || 0 | number:'1.2-2' }}</p>
-                  </div>
-                  <div class="kit-item__controls">
-                    <div class="qty-control">
-                      <button type="button" (click)="updateQty(item.product.id, -1)" class="qty-control__btn">−</button>
-                      <span class="qty-control__value">{{ item.qty }}</span>
-                      <button type="button" (click)="updateQty(item.product.id, 1)" class="qty-control__btn">+</button>
-                    </div>
-                    <button type="button" (click)="removeProduct(item.product.id)" class="action-btn action-btn--danger">
-                      <lucide-icon name="x" class="action-btn__icon"></lucide-icon>
-                    </button>
-                  </div>
-                </div>
-              } @empty {
-                <div class="kit-items__empty">
-                  Nenhum produto adicionado.<br>
-                  Selecione acima para compor o kit.
-                </div>
               }
             </div>
-          </div>
+            }
+        </div>
 
-          <div class="kit-modal-section">
-            <div class="profit-card">
-              <div class="profit-card__row">
-                <span class="profit-card__label">Custo dos Itens:</span>
-                <span class="profit-card__value">R$ {{ totalCost() | number:'1.2-2' }}</span>
+        <div class="kit-modal-section">
+          <p class="kit-modal-section__label">Composição do Kit</p>
+
+          <mat-select (selectionChange)="addProduct($event.value)" class="nx-mat-select w-full"
+            placeholder="+ Adicionar produto ao kit...">
+            @for (product of availableProducts(); track product.id) {
+            <mat-option [value]="product.id">{{ product.name }} (Estoque: {{ product.stock_qty }})</mat-option>
+            }
+          </mat-select>
+
+          <div class="kit-items mt-3">
+            @for (item of selectedItems(); track item.product.id) {
+            <div class="kit-item">
+              <div class="kit-item__info">
+                <p class="kit-item__name">{{ item.product.name }}</p>
+                <p class="kit-item__cost">Custo un: R$ {{ item.product.cost_price || 0 | number:'1.2-2' }}</p>
               </div>
-              <div class="profit-card__row mt-2">
-                <span class="profit-card__label">Preço do Kit:</span>
-                <span class="profit-card__price">R$ {{ kitForm.value.price || 0 | number:'1.2-2' }}</span>
+              <div class="kit-item__controls">
+                <div class="nx-qty-control">
+                  <button type="button" (click)="updateQty(item.product.id, -1)" class="nx-qty-control__btn">−</button>
+                  <span class="nx-qty-control__value">{{ item.qty }}</span>
+                  <button type="button" (click)="updateQty(item.product.id, 1)" class="nx-qty-control__btn">+</button>
+                </div>
+
+                <button type="button" (click)="removeProduct(item.product.id)" class="action-btn action-btn--danger">
+                  <lucide-icon name="x" class="action-btn__icon"></lucide-icon>
+                </button>
               </div>
-              <div class="profit-card__divider my-3"></div>
-              <div class="profit-card__margin">
-                <span class="profit-card__label">Margem Estimada:</span>
-                <span class="profit-card__margin-value"
-                      [ngClass]="{
+            </div>
+            } @empty {
+            <div class="kit-items__empty">
+              Nenhum produto adicionado.<br>
+              Selecione acima para compor o kit.
+            </div>
+            }
+          </div>
+        </div>
+
+        <div class="kit-modal-section">
+          <div class="profit-card">
+            <div class="profit-card__row">
+              <span class="profit-card__label">Custo dos Itens:</span>
+              <span class="profit-card__value">R$ {{ totalCost() | number:'1.2-2' }}</span>
+            </div>
+            <div class="profit-card__row mt-2">
+              <span class="profit-card__label">Preço do Kit:</span>
+              <span class="profit-card__price">R$ {{ kitForm.value.price || 0 | number:'1.2-2' }}</span>
+            </div>
+            <div class="profit-card__divider my-3"></div>
+            <div class="profit-card__margin">
+              <span class="profit-card__label">Margem Estimada:</span>
+              <span class="profit-card__margin-value" [ngClass]="{
                         'profit-card__margin-value--danger': margin() < 10,
                         'profit-card__margin-value--warning': margin() >= 10 && margin() < 30,
                         'profit-card__margin-value--success': margin() >= 30
                       }">
-                  {{ margin() | number:'1.1-1' }}%
-                </span>
-              </div>
-            </div>
-
-            <div class="toggle-field mt-4" (click)="kitForm.patchValue({is_active: !kitForm.value.is_active})">
-              <div class="toggle-field__info">
-                <p class="toggle-field__label">Kit disponível para venda</p>
-                <p class="toggle-field__desc">O bot e o catálogo irão exibir este kit.</p>
-              </div>
-              <div class="toggle-switch" [class.toggle-switch--active]="kitForm.value.is_active"></div>
+                {{ margin() | number:'1.1-1' }}%
+              </span>
             </div>
           </div>
 
-          <div class="modal-actions">
-            <button type="button" (click)="closeModal()" class="btn-cancel">Cancelar</button>
-            <button type="submit" [disabled]="kitForm.invalid || selectedItems().length === 0 || isSaving()" class="btn-primary">
-              @if (isSaving()) {
-                <lucide-icon name="refresh-cw" class="btn-icon btn-icon--spin"></lucide-icon>
-                Salvando...
-              } @else {
-                <lucide-icon name="save" class="btn-icon"></lucide-icon>
-                {{ isEditing() ? 'Salvar Alterações' : 'Criar Kit' }}
-              }
-            </button>
+          <div class="toggle-field mt-4" (click)="kitForm.patchValue({is_active: !kitForm.value.is_active})">
+            <div class="toggle-field__info">
+              <p class="toggle-field__label">Kit disponível para venda</p>
+              <p class="toggle-field__desc">O bot e o catálogo irão exibir este kit.</p>
+            </div>
+            <div class="toggle-switch" [class.toggle-switch--active]="kitForm.value.is_active"></div>
           </div>
+        </div>
 
-        </form>
-      </div>
+        <div class="modal-actions">
+          <button type="button" (click)="closeModal()" class="btn-cancel">Cancelar</button>
+          <button type="submit" [disabled]="kitForm.invalid || selectedItems().length === 0 || isSaving()"
+            class="btn-primary">
+            @if (isSaving()) {
+            <lucide-icon name="refresh-cw" class="btn-icon btn-icon--spin"></lucide-icon>
+            Salvando...
+            } @else {
+            <lucide-icon name="save" class="btn-icon"></lucide-icon>
+            {{ isEditing() ? 'Salvar Alterações' : 'Criar Kit' }}
+            }
+          </button>
+        </div>
+
+      </form>
     </div>
+  </div>
   }
 
 </div>

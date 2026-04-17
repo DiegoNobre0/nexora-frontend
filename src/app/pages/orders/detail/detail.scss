@@ -1,0 +1,440 @@
+@use 'variables' as var;
+
+.page-container {
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: #F8FAFC;
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+// ─── Header ───────────────────────────────────────────────────
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    &__left {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    &__title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #FFFFFF;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    &__date {
+        font-size: 0.875rem;
+        color: #94A3B8;
+        margin-top: 0.25rem;
+    }
+
+    &__actions {
+        display: flex;
+        gap: 0.75rem;
+    }
+}
+
+.btn-back {
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid #334155;
+    color: #CBD5E1;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        background: #334155;
+        color: #FFFFFF;
+    }
+}
+
+.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid #334155;
+    border-radius: 0.5rem;
+    color: #E2E8F0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        background: #1E293B;
+    }
+
+    &--danger {
+        color: #F87171;
+        border-color: rgba(239, 68, 68, 0.3);
+
+        &:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+    }
+}
+
+.badge--proforma {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    background: rgba(168, 85, 247, 0.15);
+    color: #C084FC;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: 9999px;
+    text-transform: uppercase;
+}
+
+// ─── Layout Grid ──────────────────────────────────────────────
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 1.5rem;
+    align-items: start;
+
+    @media (max-width: 992px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.detail-main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.detail-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+// ─── Cards & Banner ───────────────────────────────────────────
+.detail-card {
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid rgba(51, 65, 85, 0.6);
+    border-radius: 1rem;
+    padding: 1.5rem;
+
+    &__title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #FFFFFF;
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    &__notes {
+        font-size: 0.9rem;
+        color: #CBD5E1;
+        line-height: 1.6;
+        background: rgba(0, 0, 0, 0.2);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border-left: 3px solid #64748B;
+    }
+}
+
+// Status Banner (Destaque Principal)
+.status-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid transparent;
+
+    @media (max-width: 600px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    &__info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    &__icon {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    &__label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        opacity: 0.8;
+    }
+
+    &__value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-top: 0.25rem;
+    }
+
+    // Cores Dinâmicas
+    &--warning {
+        background: rgba(245, 158, 11, 0.1);
+        border-color: rgba(245, 158, 11, 0.3);
+        color: #FCD34D;
+    }
+
+    &--info {
+        background: rgba(96, 165, 250, 0.1);
+        border-color: rgba(96, 165, 250, 0.3);
+        color: #93C5FD;
+    }
+
+    &--purple {
+        background: rgba(168, 85, 247, 0.1);
+        border-color: rgba(168, 85, 247, 0.3);
+        color: #D8B4FE;
+    }
+
+    &--success {
+        background: rgba(52, 211, 153, 0.1);
+        border-color: rgba(52, 211, 153, 0.3);
+        color: #6EE7B7;
+    }
+
+    &--blue {
+        background: rgba(56, 189, 248, 0.1);
+        border-color: rgba(56, 189, 248, 0.3);
+        color: #7DD3FC;
+    }
+
+    &--danger {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: rgba(239, 68, 68, 0.3);
+        color: #FCA5A5;
+    }
+}
+
+.btn-advance {
+    background: #FFFFFF;
+    color: #0F172A;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+}
+
+// ─── Tabela de Itens ──────────────────────────────────────────
+.items-table-wrapper {
+    overflow-x: auto;
+}
+
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 500px;
+
+    th {
+        text-align: left;
+        padding: 0.75rem;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: #64748B;
+        border-bottom: 1px solid #334155;
+    }
+
+    td {
+        padding: 1rem 0.75rem;
+        border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+        vertical-align: top;
+        color: #E2E8F0;
+        font-size: 0.875rem;
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+}
+
+.item-product {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    &__name {
+        font-weight: 500;
+    }
+
+    &__notes {
+        font-size: 0.75rem;
+        color: #94A3B8;
+        font-style: italic;
+    }
+}
+
+// ─── Info Blocks (Sidebar) ────────────────────────────────────
+.info-block {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    &__icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        color: #94A3B8;
+        margin-top: 0.1rem;
+    }
+
+    &__main {
+        font-size: 0.9rem;
+        color: #E2E8F0;
+        font-weight: 500;
+        line-height: 1.4;
+    }
+
+    &__sub {
+        font-size: 0.8rem;
+        color: #64748B;
+        margin-top: 0.1rem;
+    }
+}
+
+.mt-3 {
+    margin-top: 1rem;
+}
+
+// ─── Financeiro ───────────────────────────────────────────────
+.financial-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    font-size: 0.875rem;
+    color: #CBD5E1;
+
+    &--discount {
+        color: #34D399;
+    }
+
+    &--total {
+        border-top: 1px solid #334155;
+        margin-top: 0.5rem;
+        padding-top: 1rem;
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #FFFFFF;
+    }
+}
+
+.payments-list {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed #334155;
+
+    &__title {
+        font-size: 0.75rem;
+        color: #64748B;
+        text-transform: uppercase;
+        margin-bottom: 0.75rem;
+    }
+}
+
+.payment-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #334155;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    color: #E2E8F0;
+
+    &__icon {
+        width: 1rem;
+        height: 1rem;
+        color: var.$primary;
+    }
+}
+
+// ─── Utils ────────────────────────────────────────────────────
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.fw-bold {
+    font-weight: 700;
+}
+
+// Regras de Impressão (Esconde tudo que não precisa sair no papel)
+@media print {
+
+    .no-print,
+    .btn-back {
+        display: none !important;
+    }
+
+    .page-container {
+        padding: 0;
+        color: #000;
+        background: #FFF;
+    }
+
+    .detail-card,
+    .status-banner {
+        border: 1px solid #CCC;
+        background: transparent;
+        color: #000;
+        box-shadow: none;
+    }
+
+    .status-banner__value,
+    .detail-card__title,
+    td,
+    th,
+    .item-product__name,
+    .financial-row {
+        color: #000 !important;
+    }
+}

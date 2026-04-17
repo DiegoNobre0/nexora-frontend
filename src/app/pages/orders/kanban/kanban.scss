@@ -1,0 +1,783 @@
+@use 'variables' as var;
+
+// Variáveis locais para manter consistência com o tema Dark/Slate
+$kanban-surface: rgba(30, 41, 59, 0.4); // Fundo das colunas
+$kanban-card: #1E293B; // Fundo dos cards
+$kanban-border: rgba(255, 255, 255, 0.08);
+$kanban-text-muted: #94A3B8;
+
+.kanban-page {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    height: calc(100vh - 4rem); // Garante que não crie rolagem dupla na página
+
+    @media (max-width: 640px) {
+        padding: 1rem;
+    }
+}
+
+// ─── Header ───────────────────────────────────────────────────
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &__title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: white;
+    }
+
+    &__subtitle {
+        font-size: 0.85rem;
+        color: $kanban-text-muted;
+        margin-top: 0.25rem;
+    }
+}
+
+.kanban-header-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid $kanban-border;
+    border-radius: 8px;
+    color: #CBD5E1;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.02);
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+}
+
+// ─── Board & Scrollbar Customizada ────────────────────────────
+.kanban-board {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(260px, 1fr)); // Colunas um pouco mais largas
+    gap: 1rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 1rem; // Espaço para a scrollbar
+    flex: 1;
+
+    // 🔥 SCROLLBAR ELEGANTE 🔥
+    &::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    @media (max-width: 1280px) {
+        grid-template-columns: repeat(3, minmax(260px, 1fr));
+    }
+
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(2, minmax(260px, 1fr));
+    }
+
+    @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+// ─── Coluna ───────────────────────────────────────────────────
+.kanban-col {
+    display: flex;
+    flex-direction: column;
+    background: $kanban-surface;
+    border: 1px solid $kanban-border;
+    border-radius: 12px;
+    overflow: hidden;
+    max-height: 100%; // Limita altura para rolar só os cards
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        border-bottom: 2px solid transparent;
+        background: rgba(0, 0, 0, 0.2); // Leve destaque no cabeçalho
+
+        // Cores da Borda Superior baseadas no status
+        &--warning {
+            border-top: 3px solid #F59E0B;
+        }
+
+        &--info {
+            border-top: 3px solid #38BDF8;
+        }
+
+        &--purple {
+            border-top: 3px solid var.$primary;
+        }
+
+        &--success {
+            border-top: 3px solid #34D399;
+        }
+
+        &--blue {
+            border-top: 3px solid #60A5FA;
+        }
+    }
+
+    &__header-left {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    &__icon {
+        width: 1.1rem;
+        height: 1.1rem;
+        color: #CBD5E1;
+    }
+
+    &__label {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #F8FAFC;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    &__count {
+        min-width: 1.5rem;
+        height: 1.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 0.375rem;
+    }
+
+    &__body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        overflow-y: auto;
+
+        // Scrollbar interna fina
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+    }
+
+    &__empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 3rem 1rem;
+        color: #475569; // Slate 600
+        font-size: 0.85rem;
+        text-align: center;
+        flex: 1;
+
+        &-icon {
+            width: 2rem;
+            height: 2rem;
+            opacity: 0.5;
+        }
+    }
+}
+
+// ─── Card de pedido ───────────────────────────────────────────
+.order-card {
+    background: $kanban-card;
+    border: 1px solid $kanban-border;
+    border-radius: 8px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    &:hover {
+        border-color: rgba(108, 78, 255, 0.4); // Borda primária
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    &__top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__id {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: white; // Um tom de primary mais claro
+        background: rgba(108, 78, 255, 0.15);
+        padding: 0.15rem 0.4rem;
+        border-radius: 4px;
+    }
+
+    &__time {
+        font-size: 0.75rem;
+        color: #64748B;
+        font-weight: 500;
+    }
+
+    &__client {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: white;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 0.25rem;
+    }
+
+    &__items {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+        margin: 0.25rem 0;
+    }
+
+    &__item {
+        font-size: 0.8rem;
+        color: #94A3B8;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &--more {
+            color: #64748B;
+            font-style: italic;
+        }
+    }
+
+    &__footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 0.5rem;
+        padding-top: 0.75rem;
+        border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+
+    &__total {
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: white;
+    }
+
+    &__actions {
+        display: flex;
+        gap: 0.375rem;
+        align-items: center;
+    }
+
+    &__btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.35rem 0.5rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+
+        &-icon {
+            width: 0.8rem;
+            height: 0.8rem;
+        }
+
+        &--cancel {
+            color: #94A3B8;
+            background: transparent;
+
+            &:hover {
+                color: #F87171;
+                background: rgba(239, 68, 68, 0.1);
+            }
+        }
+
+        &--advance {
+            color: white;
+            background: var.$primary;
+
+            &:hover {
+                background: var.$primary-dark;
+            }
+        }
+    }
+}
+
+// ─── Modais (Overlay, Base e Headers) ─────────────────────────
+// (Isso corrige o seu print quebrado do Modal de Detalhes)
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 1rem;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modal-card {
+    background: #0F172A; // Mais escuro que o normal para dar profundidade
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.3s ease-out;
+
+    &--sm {
+        max-width: 400px;
+    }
+
+    &--lg {
+        max-width: 650px;
+        max-height: 90vh;
+    }
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.02);
+
+    &__info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    &__title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: white;
+        margin: 0;
+    }
+
+    &__close {
+        background: transparent;
+        border: none;
+        color: #94A3B8;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 8px;
+        transition: all 0.2s;
+
+        &:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+    }
+}
+
+// ─── Detalhes do Pedido (Conteúdo do Modal) ───────────────────
+.order-detail {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+    }
+
+    &__section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        padding: 1rem;
+    }
+
+    &__section-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #64748B;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding-bottom: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    &__value {
+        font-size: 1rem;
+        font-weight: 600;
+        color: white;
+    }
+
+    &__sub {
+        font-size: 0.85rem;
+        color: #94A3B8;
+        margin-top: 0.1rem;
+    }
+
+    &__items {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    &__totals {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+        background: rgba(108, 78, 255, 0.1);
+        border: 1px solid rgba(108, 78, 255, 0.2);
+        border-radius: 8px;
+    }
+
+    &__total-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #CBD5E1;
+
+        &--discount {
+            color: #34D399;
+        }
+
+        &--final {
+            color: white;
+            font-weight: 800;
+            font-size: 1.25rem;
+            padding-top: 0.75rem;
+            border-top: 1px dashed rgba(255, 255, 255, 0.2);
+            margin-top: 0.25rem;
+        }
+    }
+
+    &__note {
+        font-size: 0.9rem;
+        color: #CBD5E1;
+        font-style: italic;
+    }
+}
+
+.detail-item {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr auto;
+    gap: 0.75rem;
+    align-items: center;
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &__qty {
+        color: #94A3B8;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 0.2rem;
+        border-radius: 4px;
+        text-align: center;
+    }
+
+    &__name {
+        color: white;
+        font-weight: 500;
+    }
+
+    &__total {
+        color: white;
+        font-weight: 700;
+        text-align: right;
+    }
+}
+
+// ─── Modal de Cancelamento ────────────────────────────────────
+.modal-form {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #CBD5E1;
+}
+
+.cancel-textarea {
+    height: 6rem;
+    resize: none;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-family: inherit;
+
+    &:focus {
+        outline: none;
+        border-color: #F87171;
+        box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+    }
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+
+    button {
+        flex: 1;
+        padding: 0.75rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-cancel {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+    }
+
+    .btn-danger {
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #FCA5A5;
+
+        &:hover:not(:disabled) {
+            background: rgba(239, 68, 68, 0.25);
+            color: white;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+}
+
+// ─── Badge de status ──────────────────────────────────────────
+.order-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    &__icon {
+        width: 0.875rem;
+        height: 0.875rem;
+    }
+
+    &--warning {
+        background: rgba(245, 158, 11, 0.15);
+        color: #FCD34D;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    &--info {
+        background: rgba(96, 165, 250, 0.15);
+        color: #93C5FD;
+        border: 1px solid rgba(96, 165, 250, 0.3);
+    }
+
+    &--purple {
+        background: rgba(168, 85, 247, 0.15);
+        color: #D8B4FE;
+        border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    &--success {
+        background: rgba(52, 211, 153, 0.15);
+        color: #6EE7B7;
+        border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    &--blue {
+        background: rgba(56, 189, 248, 0.15);
+        color: #7DD3FC;
+        border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    &--danger {
+        background: rgba(239, 68, 68, 0.15);
+        color: #FCA5A5;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+}
+
+// ─── Botão Primário Full ──────────────────────────────────────
+.btn-primary--full {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem;
+    background: var.$primary;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.5rem;
+
+    &:hover {
+        background: var.$primary-dark;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(108, 78, 255, 0.3);
+    }
+}
+
+// ─── Skeleton do kanban ───────────────────────────────────────
+.kanban-skeleton {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(260px, 1fr));
+    gap: 1rem;
+    overflow: hidden;
+
+    @media (max-width: 1280px) {
+        grid-template-columns: repeat(3, minmax(260px, 1fr));
+    }
+
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(2, minmax(260px, 1fr));
+    }
+}
+
+.kanban-col-skeleton {
+    background: $kanban-surface;
+    border: 1px solid $kanban-border;
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.skeleton--col-header {
+    height: 2rem;
+    border-radius: 6px;
+}
+
+.skeleton--card {
+    height: 8rem;
+    border-radius: 8px;
+}
+
+.skeleton {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    from {
+        background-position: 200% 0;
+    }
+
+    to {
+        background-position: -200% 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}

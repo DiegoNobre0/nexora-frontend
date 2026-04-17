@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 import { CatalogService } from '../../../services/catalog.service';
-import { Product } from '../products/products';
+
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { Product } from '../../../interfaces/catalog.interface';
 
 @Component({
   selector: 'app-kits',
@@ -73,6 +74,7 @@ export class KitsComponent implements OnInit {
     this.catalogService.getPromoKits().subscribe({
       next: (res: any) => {
         this.kits.set(res.data || res); 
+        console.log('Kits carregados:', this.kits());
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -128,7 +130,33 @@ export class KitsComponent implements OnInit {
   }
 
   editKit(kit: any) {
-    alert('Edição de kit em desenvolvimento. Envolve preview de arquivos.');
+    console.log('Items do kit:', JSON.stringify(kit.items, null, 2))
+    this.isEditing.set(true);
+    this.currentKitId.set(kit.id);
+
+    // 1. Preenche o formulário de textos
+    this.kitForm.patchValue({
+      name: kit.name,
+      description: kit.description,
+      price: kit.price,
+      is_active: kit.is_active
+    });
+
+    // 2. Preenche a composição do kit
+    // Como o backend já envia o include do "product", fica fácil mapear pro formato da UI
+    const itemsToEdit = kit.items.map((i: any) => ({
+      product: i.product, // O backend já manda id, name, price, cost_price
+      qty: i.quantity
+    }));
+    this.selectedItems.set(itemsToEdit);
+
+    // 3. Preenche as imagens existentes
+    const urls = [kit.image_url_1, kit.image_url_2, kit.image_url_3, kit.image_url_4].filter(Boolean);
+    this.previews.set(urls);
+    this.images.set([]); // O array de Arquivos novos (Files) começa vazio, pois as que estão lá são URLs
+
+    // Abre o Modal
+    this.isModalOpen.set(true);
   }
 
   // ─── LÓGICA DE IMAGENS ────────────────────────────────────
@@ -187,6 +215,7 @@ export class KitsComponent implements OnInit {
 
   // ─── SALVAR NO BACKEND ────────────────────────────────────
   onSubmit() {
+    
     if (this.kitForm.invalid || this.selectedItems().length === 0) {
       alert('Preencha os dados do kit e adicione ao menos um produto.');
       return;
@@ -198,8 +227,13 @@ export class KitsComponent implements OnInit {
     const formValues = this.kitForm.getRawValue();
 
     formData.append('name', formValues.name);
-    formData.append('description', formValues.description);
-    formData.append('price', formValues.price.toString());
+    
+    if (formValues.description) {
+      formData.append('description', formValues.description);
+    }
+    
+    // O price pode vir como string do input HTML, garantimos que não vá "undefined"
+    formData.append('price', (formValues.price || 0).toString());
     formData.append('is_active', formValues.is_active.toString());
     
     // Transformando a composição em JSON
@@ -208,21 +242,44 @@ export class KitsComponent implements OnInit {
       quantity: i.qty
     }))));
 
-    // Append de arquivos binários
+    // Append de arquivos binários (Apenas as novas imagens que o usuário escolheu)
     this.images().forEach((file, index) => {
       formData.append(`image_${index + 1}`, file);
     });
 
-    this.catalogService.createPromoKit(formData).subscribe({
-      next: () => {
-        this.loadKits(); // Recarrega a Grid
-        this.closeModal(); // Fecha o modal
-        this.isSaving.set(false);
-      },
-      error: () => {
-        alert('Erro ao salvar kit. Verifique se o backend está rodando.');
-        this.isSaving.set(false);
-      }
-    });
+    // ────────────────────────────────────────────────────────
+    // Roteamento: É uma Edição ou uma Criação?
+    // ────────────────────────────────────────────────────────
+    if (this.isEditing() && this.currentKitId()) {
+      // 🔵 FLUXO DE ATUALIZAÇÃO (PUT)
+      this.catalogService.updatePromoKit(this.currentKitId()!, formData).subscribe({
+        next: () => {
+          this.loadKits(); // Recarrega a Grid com os dados novos
+          this.closeModal(); // Fecha o modal e limpa tudo
+          this.isSaving.set(false);
+        },
+        error: (err : any) => {
+          console.error(err);
+          alert('Erro ao atualizar kit. Verifique o console.');
+          this.isSaving.set(false);
+        }
+      });
+
+    } else {
+      // 🟢 FLUXO DE CRIAÇÃO (POST)
+      console.log([...formData.entries()]) // Debug para verificar o conteúdo do FormData antes de enviar
+      this.catalogService.createPromoKit(formData).subscribe({
+        next: () => {
+          this.loadKits(); // Recarrega a Grid
+          this.closeModal(); // Fecha o modal e limpa tudo
+          this.isSaving.set(false);
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Erro ao salvar kit. Verifique se o backend está rodando.');
+          this.isSaving.set(false);
+        }
+      });
+    }
   }
 }

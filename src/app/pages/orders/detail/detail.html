@@ -1,0 +1,200 @@
+<div class="page-container">
+  @if (isLoading()) {
+    <div class="skeleton-page">
+      <div class="skeleton skeleton--header"></div>
+      <div class="skeleton skeleton--body"></div>
+    </div>
+  } @else if (errorMsg()) {
+    <div class="error-state">
+      <lucide-icon name="alert-triangle" class="error-state__icon"></lucide-icon>
+      <h2>Ops! Algo deu errado.</h2>
+      <p>{{ errorMsg() }}</p>
+      <button (click)="goBack()" class="btn-primary">Voltar</button>
+    </div>
+  } @else if (order()) {
+    
+    <header class="detail-header">
+      <div class="detail-header__left">
+        <button (click)="goBack()" class="btn-back" title="Voltar">
+          <lucide-icon name="arrow-left" class="btn-icon"></lucide-icon>
+        </button>
+        <div>
+          <h1 class="detail-header__title">
+            Pedido #{{ shortId() }}
+            @if (order()!.is_proforma) {
+              <span class="badge badge--proforma">Orçamento</span>
+            }
+          </h1>
+          <p class="detail-header__date">Registrado em {{ formatDate(order()!.created_at) }} via {{ order()!.channel }}</p>
+        </div>
+      </div>
+
+      <div class="detail-header__actions no-print">
+        <button (click)="printOrder()" class="btn-outline">
+          <lucide-icon name="printer" class="btn-icon"></lucide-icon> Imprimir
+        </button>
+        
+        @if (order()!.status !== 'CANCELED' && order()!.status !== 'DELIVERED') {
+          <button (click)="cancelOrder()" class="btn-outline btn-outline--danger">
+            Cancelar
+          </button>
+        }
+      </div>
+    </header>
+
+    <div class="detail-grid">
+      
+      <div class="detail-main">
+        
+        <div class="status-banner status-banner--{{ getStatusMeta(order()!.status).color }}">
+          <div class="status-banner__info">
+            <lucide-icon [name]="getStatusMeta(order()!.status).icon" class="status-banner__icon"></lucide-icon>
+            <div>
+              <p class="status-banner__label">Status Atual</p>
+              <h3 class="status-banner__value">{{ getStatusMeta(order()!.status).label }}</h3>
+            </div>
+          </div>
+
+          @if (getNextActionLabel(order()!.status)) {
+            <button (click)="advanceStatus()" [disabled]="isProcessing()" class="btn-advance no-print">
+              {{ getNextActionLabel(order()!.status) }}
+              <lucide-icon name="arrow-right" class="btn-icon btn-icon--right"></lucide-icon>
+            </button>
+          }
+        </div>
+
+        <section class="detail-card">
+          <h2 class="detail-card__title">Itens do Pedido ({{ order()!.items.length }})</h2>
+          
+          <div class="items-table-wrapper">
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th class="text-center">Qtd</th>
+                  <th class="text-right">Preço Un.</th>
+                  <th class="text-right">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of order()!.items; track item.id) {
+                  <tr>
+                    <td>
+                      <div class="item-product">
+                        <span class="item-product__name">{{ item.product.name }}</span>
+                        @if (item.notes) {
+                          <span class="item-product__notes">Obs: {{ item.notes }}</span>
+                        }
+                      </div>
+                    </td>
+                    <td class="text-center">{{ item.quantity }}</td>
+                    <td class="text-right">{{ formatCurrency(item.unit_price) }}</td>
+                    <td class="text-right fw-bold">{{ formatCurrency(item.total) }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        @if (order()!.notes) {
+          <section class="detail-card">
+            <h2 class="detail-card__title">Observações do Pedido</h2>
+            <p class="detail-card__notes">{{ order()!.notes }}</p>
+          </section>
+        }
+      </div>
+
+      <aside class="detail-sidebar">
+        
+        <section class="detail-card">
+          <h2 class="detail-card__title">Cliente</h2>
+          <div class="info-block">
+            <lucide-icon name="user" class="info-block__icon"></lucide-icon>
+            <div>
+              <p class="info-block__main">{{ order()!.client?.name || order()!.client?.company_name || 'Consumidor Final' }}</p>
+              @if (order()!.client?.phone) {
+                <p class="info-block__sub">{{ order()!.client!.phone }}</p>
+              }
+            </div>
+          </div>
+        </section>
+
+        <section class="detail-card">
+          <h2 class="detail-card__title">Logística ({{ order()!.type }})</h2>
+          
+          @if (order()!.type === 'DELIVERY' && order()!.address) {
+            <div class="info-block">
+              <lucide-icon name="map-pin" class="info-block__icon"></lucide-icon>
+              <div>
+                <p class="info-block__main">{{ order()!.address!.street }}, {{ order()!.address!.number }}</p>
+                <p class="info-block__sub">{{ order()!.address!.district }} - {{ order()!.address!.city }}</p>
+              </div>
+            </div>
+          } @else if (order()!.type === 'PICKUP') {
+            <div class="info-block">
+              <lucide-icon name="store" class="info-block__icon"></lucide-icon>
+              <p class="info-block__main">Retirada na Loja</p>
+            </div>
+          } @else {
+            <div class="info-block">
+              <lucide-icon name="coffee" class="info-block__icon"></lucide-icon>
+              <p class="info-block__main">Consumo no Local / Balcão</p>
+            </div>
+          }
+
+          @if (order()!.employee) {
+            <div class="info-block mt-3">
+              <lucide-icon name="bike" class="info-block__icon"></lucide-icon>
+              <div>
+                <p class="info-block__sub">Entregador Responsável</p>
+                <p class="info-block__main">{{ order()!.employee!.name }}</p>
+              </div>
+            </div>
+          }
+        </section>
+
+        <section class="detail-card financial-card">
+          <h2 class="detail-card__title">Resumo Financeiro</h2>
+          
+          <div class="financial-row">
+            <span>Subtotal</span>
+            <span>{{ formatCurrency(order()!.subtotal) }}</span>
+          </div>
+          
+          @if (order()!.delivery_fee > 0) {
+            <div class="financial-row">
+              <span>Taxa de Entrega</span>
+              <span>{{ formatCurrency(order()!.delivery_fee) }}</span>
+            </div>
+          }
+          
+          @if (order()!.discount > 0) {
+            <div class="financial-row financial-row--discount">
+              <span>Desconto</span>
+              <span>− {{ formatCurrency(order()!.discount) }}</span>
+            </div>
+          }
+          
+          <div class="financial-row financial-row--total">
+            <span>Total</span>
+            <span>{{ formatCurrency(order()!.total) }}</span>
+          </div>
+
+          @if (order()!.payments && order()!.payments.length > 0) {
+            <div class="payments-list">
+              <p class="payments-list__title">Pagamentos Registrados</p>
+              @for (pay of order()!.payments; track pay.id) {
+                <div class="payment-badge">
+                  <lucide-icon name="credit-card" class="payment-badge__icon"></lucide-icon>
+                  <span>{{ pay.method }} - {{ formatCurrency(pay.amount) }}</span>
+                </div>
+              }
+            </div>
+          }
+        </section>
+
+      </aside>
+    </div>
+  }
+</div>

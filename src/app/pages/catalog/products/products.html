@@ -24,35 +24,27 @@
   }
 
   <!-- Toolbar -->
-<div class="toolbar">
-    
+  <div class="toolbar">
+
     <div class="toolbar__item toolbar__item--search">
       <lucide-icon name="search" class="toolbar__search-icon"></lucide-icon>
-      <input type="text" 
-             [ngModel]="searchTerm()" 
-             (ngModelChange)="searchTerm.set($event)" 
-             (keyup.enter)="onSearch()" 
-             placeholder="Buscar por nome ou código..." 
-             class="nexora-input toolbar__search-input">
+      <input type="text" [ngModel]="searchTerm()" (ngModelChange)="onSearchChange($event)"
+        placeholder="Buscar por nome ou código..." class="nexora-input toolbar__search-input">
     </div>
 
     <div class="toolbar__item toolbar__item--category">
-      <mat-select [ngModel]="selectedCategory()" 
-                  (ngModelChange)="selectedCategory.set($event); onSearch()" 
-                  class="nx-mat-select" 
-                  placeholder="Todas as categorias">
+      <mat-select [ngModel]="selectedCategory()" (ngModelChange)="selectedCategory.set($event); onSearch()"
+        class="nx-mat-select" placeholder="Todas as categorias">
         <mat-option value="">Todas as categorias</mat-option>
         @for (cat of categories(); track cat.id) {
-          <mat-option [value]="cat.id">{{ cat.name }}</mat-option>
+        <mat-option [value]="cat.id">{{ cat.name }}</mat-option>
         }
       </mat-select>
     </div>
 
     <div class="toolbar__item toolbar__item--status">
-      <mat-select [ngModel]="selectedStatus()" 
-                  (ngModelChange)="selectedStatus.set($event); onSearch()" 
-                  class="nx-mat-select" 
-                  placeholder="Todos">
+      <mat-select [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event); onSearch()"
+        class="nx-mat-select" placeholder="Todos">
         <mat-option value="">Todos</mat-option>
         <mat-option value="true">Ativos</mat-option>
         <mat-option value="false">Pausados</mat-option>
@@ -127,7 +119,17 @@
 
             <!-- Categoria -->
             <td class="data-table__td">
-              <span class="data-table__secondary">{{ product.category?.name || '—' }}</span>
+              @if (product.categories && product.categories.length > 0) {
+              <div class="category-badges">
+                @for (cat of product.categories; track cat.id) {
+                <span class="category-badge">
+                  {{ cat.name }}
+                </span>
+                }
+              </div>
+              } @else {
+              <span class="data-table__secondary">—</span>
+              }
             </td>
 
             <!-- Preço -->
@@ -166,6 +168,9 @@
                 <button (click)="toggleProduct(product)" class="action-btn"
                   [title]="product.is_active ? 'Pausar' : 'Reativar'">
                   <lucide-icon [name]="product.is_active ? 'eye-off' : 'eye'" class="action-btn__icon"></lucide-icon>
+                </button>
+                <button (click)="openDeleteConfirm(product)" class="action-btn action-btn--danger" title="Excluir">
+                  <lucide-icon name="trash-2" class="action-btn__icon"></lucide-icon>
                 </button>
               </div>
             </td>
@@ -314,22 +319,22 @@
             <div class="form-field product-form__col--sm">
               <label class="form-label">Unidade</label>
               <mat-select formControlName="unit" class="nx-mat-select w-full">
-                <mat-option value="UN">UN — Unidade</mat-option>
-                <mat-option value="KG">KG — Quilograma</mat-option>
-                <mat-option value="G">G — Grama</mat-option>
-                <mat-option value="L">L — Litro</mat-option>
-                <mat-option value="ML">ML — Mililitro</mat-option>
-                <mat-option value="CX">CX — Caixa</mat-option>
-                <mat-option value="PCT">PCT — Pacote</mat-option>
-                <mat-option value="FD">FD — Fardo</mat-option>
+                <mat-option value="UN">UN - Unidade</mat-option>
+                <mat-option value="KG">KG - Quilograma</mat-option>
+                <mat-option value="G">G - Grama</mat-option>
+                <mat-option value="L">L - Litro</mat-option>
+                <mat-option value="ML">ML - Mililitro</mat-option>
+                <mat-option value="CX">CX - Caixa</mat-option>
+                <mat-option value="PCT">PCT - Pacote</mat-option>
+                <mat-option value="FD">FD - Fardo</mat-option>
               </mat-select>
             </div>
           </div>
 
           <div class="form-field">
-            <label class="form-label">Categoria</label>
-            <mat-select formControlName="category_id" class="nx-mat-select w-full" placeholder="Sem categoria">
-              <mat-option value="">Sem categoria</mat-option>
+            <label class="form-label">Categorias <span class="form-label--optional">(múltiplas)</span></label>
+            <mat-select formControlName="category_ids" multiple class="nx-mat-select w-full"
+              placeholder="Selecione as categorias">
               @for (cat of categories(); track cat.id) {
               <mat-option [value]="cat.id">{{ cat.name }}</mat-option>
               }
@@ -343,9 +348,78 @@
           </div>
         </div>
 
+        <div class="product-form__section">
+          <div class="product-form__section-header barcode-header">
+            <p class="product-form__section-label">Códigos de Barras</p>
+            <button type="button" (click)="addBarcode()" class="btn-primary btn-add-barcode">
+              <lucide-icon name="plus" [size]="16"></lucide-icon>
+              Adicionar
+            </button>
+          </div>
+
+          <div formArrayName="barcodes" class="barcode-list">
+            @for (bc of barcodes.controls; track $index) {
+            <div [formGroupName]="$index" class="barcode-item">
+
+              <div class="form-field barcode-item__code">
+                <label class="form-label">EAN / Código</label>
+                <input type="text" formControlName="code" class="nexora-input barcode-input"
+                  placeholder="Ler com o scanner ou digitar...">
+                @if (bc.get('code')?.invalid && bc.get('code')?.touched) {
+                <p class="form-error">Obrigatório.</p>
+                }
+              </div>
+
+              <div class="form-field barcode-item__unit">
+                <label class="form-label">Unid.</label>
+                <mat-select formControlName="unit" class="nx-mat-select barcode-select">
+                  <mat-option value="UN">UN</mat-option>
+                  <mat-option value="CX">CX</mat-option>
+                  <mat-option value="FD">FD</mat-option>
+                  <mat-option value="KG">KG</mat-option>
+                </mat-select>
+              </div>
+
+              <button type="button" (click)="removeBarcode($index)" class="barcode-item__delete" title="Remover código">
+                <lucide-icon name="trash-2" [size]="20"></lucide-icon>
+              </button>
+
+            </div>
+            } @empty {
+            <div class="barcode-empty">
+              Nenhum código cadastrado. Clique em "Adicionar" para inserir EANs.
+            </div>
+            }
+          </div>
+        </div>
+        <div class="product-form__section">
+          <p class="product-form__section-label">Foto do Produto</p>
+
+          @if (!imagePreview()) {
+          <label class="upload-zone">
+            <lucide-icon name="image-plus" class="upload-zone__icon"></lucide-icon>
+            <span class="upload-zone__label">Clique para selecionar a imagem</span>
+            <span class="upload-zone__hint">PNG, JPG até 5MB</span>
+            <input type="file" accept="image/*" class="upload-zone__input" (change)="onFileSelected($event)">
+          </label>
+          } @else {
+          <div style="display: flex; gap: 1rem;">
+            <div class="image-thumb" style="width: 120px; height: 120px;">
+              <img [src]="imagePreview()" class="image-thumb__img" alt="Preview do Produto">
+              <div class="image-thumb__overlay">
+                <button type="button" (click)="removeImage()" class="image-thumb__remove">
+                  <lucide-icon name="trash-2" class="action-btn__icon"></lucide-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+
         <!-- Seção: Preços -->
         <div class="product-form__section">
-          <p class="product-form__section-label">Preços</p>
+          <p class="product-form__section-label">Identificação</p>
+          <!-- <p class="product-form__section-label">Preços</p> -->
 
           <div class="product-form__row">
             <div class="form-field product-form__col">
@@ -476,3 +550,13 @@
   }
 
 </div>
+
+<nx-dialog *ngIf="isConfirmModalOpen()" type="danger" title="Excluir Produto"
+  [message]="'Deseja excluir o produto <strong>' + itemToDelete()?.name + '</strong>?'" confirmLabel="Sim, Excluir"
+  confirmIcon="trash-2" [isLoading]="isDeleting()" (confirm)="confirmDelete()" (cancel)="closeDeleteConfirm()">
+</nx-dialog>
+
+<nx-dialog *ngIf="showErrorModal()" type="error" title="Erro na Operação"
+  message="Não foi possível salvar os dados. Tente novamente mais tarde." confirmLabel="Entendido"
+  (confirm)="closeErrorModal()" (cancel)="closeErrorModal()">
+</nx-dialog>
